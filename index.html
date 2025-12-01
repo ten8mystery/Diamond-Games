@@ -2,24 +2,86 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Diamond - Better Gaming</title>
+  <style>
+    /* ---------- Root & Reset ---------- */
+    :root{
+      --bg:#030308;
+      --panel: rgba(255,255,255,0.03);
+      --glass: rgba(255,255,255,0.04);
+      --accent1: 220 88% 60%; /* blue */
+      --accent2: 280 88% 60%; /* purple */
+      --accent3: 140 75% 50%; /* green */
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:var(--bg);color:#e6eef8;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
 
-  <!-- External CSS hosted on GitHub via JSDelivr -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/yourusername/arcade-hub@main/styles.css" />
+    /* ---------- Animated background canvas (particles) ---------- */
+    /* place canvas behind everything to avoid repainting issues during scroll */
+    canvas#particles{position:fixed;inset:0;z-index:-2;pointer-events:none;will-change:transform}
 
-  <script src="https://cdn.jsdelivr.net/gh/yourusername/arcade-hub@main/game.js" defer></script>
+    /* ---------- Moving orbs ---------- */
+    .orb{position:fixed;border-radius:50%;filter:blur(120px);opacity:0.95;mix-blend-mode:screen;z-index:-1;pointer-events:none}
+    .orb.orb--a{width:540px;height:540px;left:-8%;top:-6%;background:radial-gradient(circle at 30% 30%, hsla(var(--accent1),0.95) 0%, transparent 50%);animation:orbA 18s ease-in-out infinite}
+    .orb.orb--b{width:520px;height:520px;right:-6%;bottom:-8%;background:radial-gradient(circle at 70% 70%, hsla(var(--accent2),0.95) 0%, transparent 50%);animation:orbB 20s ease-in-out infinite}
+    .orb.orb--c{width:480px;height:480px;left:10%;bottom:-12%;background:radial-gradient(circle at 60% 40%, hsla(var(--accent3),0.9) 0%, transparent 50%);animation:orbC 24s ease-in-out infinite}
+    @keyframes orbA{0%{transform:translate(0,0)}50%{transform:translate(70px,-40px)}100%{transform:translate(0,0)}}
+    @keyframes orbB{0%{transform:translate(0,0)}50%{transform:translate(-60px,50px)}100%{transform:translate(0,0)}}
+    @keyframes orbC{0%{transform:translate(0,0)}50%{transform:translate(40px,60px)}100%{transform:translate(0,0)}}
+
+    /* ---------- HUD Navbar ---------- */
+    .hud{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:30;display:flex;align-items:center;gap:14px;width:92%;max-width:1200px;padding:10px 16px;border-radius:14px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);box-shadow:0 10px 40px rgba(0,0,0,0.6);backdrop-filter:blur(8px)}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo .mark{width:40px;height:40px;border-radius:9px;background:linear-gradient(135deg, hsl(var(--accent2)), hsl(var(--accent1)));box-shadow:0 8px 30px rgba(145,90,255,0.18)}
+    .logo h1{font-size:18px;margin:0}
+    .hud .right{margin-left:auto;display:flex;gap:10px}
+    .pill{padding:8px 12px;border-radius:999px;background:var(--panel);border:1px solid rgba(255,255,255,0.03);font-size:13px;display:inline-flex;align-items:center;}
+
+    /* ---------- Hero ---------- */
+    .hero{padding-top:110px;padding-bottom:18px;text-align:center;z-index:5;position:relative}
+    .hero h2{font-size:40px;margin:0 0 8px;text-shadow:0 8px 40px rgba(147,51,234,0.12)}
+    .hero p{margin:0;color:rgba(230,238,248,0.75)}
+
+    /* ---------- Search bar ---------- */
+    .search-wrap{display:flex;justify-content:center;margin-top:18px}
+    .search{width:680px;max-width:92%;padding:12px 18px;border-radius:999px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);display:flex;gap:10px;align-items:center;box-shadow:0 10px 40px rgba(99,102,241,0.04)}
+    .search input{flex:1;background:transparent;border:0;color:inherit;font-size:16px;outline:none}
+
+    /* ---------- Grid ---------- */
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;max-width:1200px;margin:36px auto;padding:0 18px;z-index:5}
+
+    /* ---------- Card ---------- */
+    /* Use solid-ish dark background and promote to its own layer to avoid flashing on scroll */
+    .card{position:relative;overflow:hidden;border-radius:14px;padding:12px;background:rgba(8,9,12,0.8);border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 30px rgba(0,0,0,0.6);transition:transform 260ms cubic-bezier(.2,.9,.2,1), box-shadow 260ms;will-change:transform,box-shadow,opacity;transform-style:preserve-3d;backface-visibility:hidden}
+    .card .thumb{width:100%;height:150px;object-fit:cover;border-radius:10px;display:block}
+    .card .meta{padding:12px 6px;text-align:center}
+    .card h3{margin:0 0 8px 0;font-size:18px}
+    .card .play{display:inline-block;padding:10px 14px;border-radius:10px;border:none;color:white;background:linear-gradient(90deg,hsl(var(--accent1)),hsl(var(--accent2)));box-shadow:0 10px 30px hsla(var(--accent1),0.18);cursor:pointer;transition:transform 160ms}
+    .card .play:hover{transform:translateY(-4px) scale(1.03)}
+
+    /* prevent white/rainbow :hover flash by overriding pseudo-elements */
+    .card::before,.card::after{content:'';position:absolute;inset:0;border-radius:14px;pointer-events:none;transition:opacity .25s, filter .25s}
+    .card::before{background:linear-gradient(90deg, rgba(0,0,0,0.25), rgba(0,0,0,0.15));mix-blend-mode:normal;opacity:1}
+    .card:hover::before{opacity:1;filter:brightness(0.9)}
+
+    /* keep hover dark */
+    .card:hover{transform:translateY(-8px) scale(1.03);box-shadow:0 30px 60px rgba(0,0,0,0.6),0 0 30px hsla(var(--accent2),0.18)}
+
+    /* small screens */
+    @media (max-width:640px){.hero h2{font-size:26px}.search{width:92%}}
+    body::before{content:'';position:fixed;inset:0;z-index:-3;background:var(--bg);}
+</style>
 </head>
 <body>
   <!-- Particles canvas -->
   <canvas id="particles"></canvas>
-
   <!-- Orbs -->
   <div class="orb orb--a"></div>
   <div class="orb orb--b"></div>
   <div class="orb orb--c"></div>
 
-  <!-- HUD Navbar -->
+  <!-- HUD -->
   <div class="hud">
     <div class="logo">
       <div class="mark"></div>
@@ -43,11 +105,11 @@
     </section>
 
     <section class="grid" id="grid">
-      <!-- Cards injected by JS -->
+      <!-- cards injected by JS -->
     </section>
   </main>
 
-  <!-- Modal for Game Embed -->
+  <!-- Modal -->
   <div id="modal" style="display:none;position:fixed;inset:0;justify-content:center;align-items:center;background:rgba(2,6,23,0.8);z-index:60">
     <div style="width:92%;max-width:1100px;height:80vh;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);box-shadow:0 30px 80px rgba(0,0,0,0.6);background:#07070b">
       <button id="closeModal" style="position:absolute;right:20px;top:16px;z-index:70;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.06);border:none;color:#fff;cursor:pointer">Close</button>
@@ -55,148 +117,94 @@
     </div>
   </div>
 
-  <script>
-    // Game data (initially empty)
-    let GAMES = [];
-    const grid = document.getElementById('grid');
-    const q = document.getElementById('q');
-    const modal = document.getElementById('modal');
-    const gameFrame = document.getElementById('gameFrame');
-    const closeModal = document.getElementById('closeModal');
+<script>
+  // ---------- Game list (embeds) ----------
+  let GAMES = [];
 
-    // Function to create each game card
-    function createCard(game) {
-      const el = document.createElement('article');
-      el.className = 'card';
+  const grid = document.getElementById('grid');
+  const q = document.getElementById('q');
+  const modal = document.getElementById('modal');
+  const gameFrame = document.getElementById('gameFrame');
+  const closeModal = document.getElementById('closeModal');
 
-      const img = document.createElement('img');
-      img.className = 'thumb';
-      img.src = game.thumb;
-      img.alt = game.title;
+  function createCard(game) {
+    const el = document.createElement('article');
+    el.className = 'card';
 
-      const meta = document.createElement('div'); 
-      meta.className = 'meta';
-      const h3 = document.createElement('h3'); 
-      h3.textContent = game.title;
-      const btn = document.createElement('button'); 
-      btn.className = 'play'; 
-      btn.textContent = 'Play';
+    const img = document.createElement('img');
+    img.className = 'thumb';
+    img.src = game.thumb;
+    img.alt = game.title;
 
-      // Event listener for opening game in modal
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openGame(game);
-      });
+    const meta = document.createElement('div'); 
+    meta.className = 'meta';
+    const h3 = document.createElement('h3'); 
+    h3.textContent = game.title;
+    const btn = document.createElement('button'); 
+    btn.className = 'play'; 
+    btn.textContent = 'Play';
 
-      meta.appendChild(h3); 
-      meta.appendChild(btn);
-      el.appendChild(img); 
-      el.appendChild(meta);
-
-      // 3D tilt effect on card hover
-      el.addEventListener('mousemove', (ev) => {
-        const rect = el.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2; 
-        const cy = rect.top + rect.height / 2;
-        const dx = ev.clientX - cx; 
-        const dy = ev.clientY - cy;
-        const rx = (dy / rect.height) * 8; 
-        const ry = -(dx / rect.width) * 8;
-        el.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(6px)`;
-      });
-      
-      el.addEventListener('mouseleave', () => { 
-        el.style.transform = ''; 
-      });
-
-      return el;
-    }
-
-    // Function to render game cards based on search filter
-    function render(filter = '') {
-      grid.innerHTML = '';
-      GAMES.filter(g => g.title.toLowerCase().includes(filter.toLowerCase()))
-        .forEach(g => grid.appendChild(createCard(g)));
-    }
-
-    // Function to open the game in the modal
-    function openGame(game) {
-      gameFrame.src = game.src;
-      modal.style.display = 'flex';
-    }
-
-    // Close modal on button click
-    closeModal.addEventListener('click', () => {
-      modal.style.display = 'none';
-      gameFrame.src = '';
+    // Open game in modal
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openGame(game);
     });
 
-    // Search event listener
-    q.addEventListener('input', () => render(q.value));
+    meta.appendChild(h3); 
+    meta.appendChild(btn);
+    el.appendChild(img); 
+    el.appendChild(meta);
 
-    // Fetching external JSON (game data) from JSDelivr
-    fetch('https://cdn.jsdelivr.net/gh/yourusername/arcade-hub@main/arcade_data.json')
-      .then(r => r.json())
-      .then(data => {
-        GAMES = data.games;
-        const MESSAGES = data.messages;
-        document.getElementById('motd').textContent = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
-        render();
-      })
-      .catch(err => console.error('JSON load error', err));
-
-    // ---------- Particles (lightweight) ----------
-    const canvas = document.getElementById('particles');
-    const ctx = canvas.getContext('2d');
+    // 3D tilt effect on card hover
+    el.addEventListener('mousemove', (ev) => {
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2; 
+      const cy = rect.top + rect.height / 2;
+      const dx = ev.clientX - cx; 
+      const dy = ev.clientY - cy;
+      const rx = (dy / rect.height) * 8; 
+      const ry = -(dx / rect.width) * 8;
+      el.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(6px)`;
+    });
     
-    // Resize canvas to fit screen
-    function resize() { 
-      canvas.width = innerWidth; 
-      canvas.height = innerHeight; 
-    }
+    el.addEventListener('mouseleave', () => { 
+      el.style.transform = ''; 
+    });
 
-    addEventListener('resize', resize); 
-    resize();
+    return el;
+  }
 
-    // Particle system setup
-    const particles = [];
-    const count = Math.max(10, Math.floor((canvas.width * canvas.height) / 70000));
-    for (let i = 0; i < count; i++) 
-      particles.push({ 
-        x: Math.random() * canvas.width, 
-        y: Math.random() * canvas.height, 
-        r: 0.5 + Math.random() * 2, 
-        vx: (Math.random() - 0.5) * 0.25, 
-        vy: (Math.random() - 0.5) * 0.25, 
-        hue: Math.floor(Math.random() * 360) 
-      });
+  function render(filter = '') {
+    grid.innerHTML = '';
+    GAMES.filter(g => g.title.toLowerCase().includes(filter.toLowerCase()))
+      .forEach(g => grid.appendChild(createCard(g)));
+  }
 
-    // Particle animation loop
-    function step() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const g = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      g.addColorStop(0, 'rgba(2,6,23,0.08)'); 
-      g.addColorStop(1, 'rgba(10,8,15,0.08)');
-      ctx.fillStyle = g; 
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+  function openGame(game) {
+    gameFrame.src = game.src;
+    modal.style.display = 'flex';
+  }
 
-      particles.forEach(p => {
-        p.x += p.vx; 
-        p.y += p.vy;
-        if (p.x < -10) p.x = canvas.width + 10; 
-        if (p.x > canvas.width + 10) p.x = -10;
-        if (p.y < -10) p.y = canvas.height + 10; 
-        if (p.y > canvas.height + 10) p.y = -10;
+  // Close modal on button click
+  closeModal.addEventListener('click', () => {
+    modal.style.display = 'none';
+    gameFrame.src = '';
+  });
 
-        ctx.beginPath(); 
-        ctx.fillStyle = `hsla(${p.hue},80%,60%,0.10)`; 
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); 
-        ctx.fill();
-      });
+  // Search functionality
+  q.addEventListener('input', () => render(q.value));
 
-      requestAnimationFrame(step);
-    }
-    step();
-  </script>
+  // Fetching the game data (arcade_data.json) from JSDelivr
+  fetch('https://cdn.jsdelivr.net/gh/yourusername/yourrepo@main/arcade_data.json')
+    .then(r => r.json())
+    .then(data => {
+      GAMES = data.games;
+      const MESSAGES = data.messages;
+      document.getElementById('motd').textContent = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
+      render();
+    })
+    .catch(err => console.error('Error loading games data', err));
+
+</script>
 </body>
 </html>
