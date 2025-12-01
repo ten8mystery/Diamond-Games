@@ -26,15 +26,19 @@
       "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2HXY67NSbyMMpzlnSbBWUpcSmNMDM3CPoEA&s"
     },
     {
+      "title": "Minecraft 1.12",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/182.html",
+      "thumb": "https://www.pluggedin.com/wp-content/uploads/2020/01/minecraft-review-image.jpg"
+    },
+    {
+      "title": "Baldi's Basic Plus",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/467.html",
+      "thumb": "https://img.itch.zone/aW1hZ2UvNTk4NzcyLzIxODU0NjA5LnBuZw==/original/HzlJH7.png"
+    },
+    {
       "title": "Run 3",
       "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/177.html",
       "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlEIB4BKRwQhBZENGwoA4lZtd4IoatQ7WvMQ&s"
     }
-  ],
-  "messages": [
-    "Welcome to Arcade Hub!",
-    "Neon vibes loaded.",
-    "Ready to play?",
-    "Arcade energy online."
   ]
 }
