@@ -130,52 +130,6 @@
       font-weight: 500;
     }
 
-    /* ---------- Settings Button ---------- */
-    #settingsButton {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 16px;
-      color: #e6eef8;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 10px 16px;
-      cursor: pointer;
-      transition: background 200ms ease-in-out;
-    }
-
-    #settingsButton:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    /* ---------- Settings Panel ---------- */
-    #settingsPanel {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 70;
-      padding: 20px;
-      background: rgba(8, 9, 12, 0.9);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-      border-radius: 12px;
-      width: 320px;
-      text-align: center;
-    }
-
-    /* ---------- Close Button in Settings Panel ---------- */
-    #closeSettings {
-      background: rgba(255, 255, 255, 0.08);
-      border: none;
-      color: white;
-      cursor: pointer;
-      transition: background 200ms;
-    }
-
-    #closeSettings:hover {
-      background: rgba(255, 255, 255, 0.12);
-    }
-
     /* ---------- Hero Section ---------- */
     .hero {
       padding-top: 130px;
@@ -315,14 +269,11 @@
   </style>
 </head>
 <body>
-  <!-- Particles canvas -->
   <canvas id="particles"></canvas>
-  <!-- Orbs -->
   <div class="orb orb--a"></div>
   <div class="orb orb--b"></div>
   <div class="orb orb--c"></div>
 
-  <!-- HUD -->
   <div class="hud">
     <div class="logo">
       <div class="mark">
@@ -335,25 +286,6 @@
     </div>
     <div class="pill" id="versionTag">v1.0</div>
     <div id="motd" style="font-size: 14px; color: rgba(230, 238, 248, 0.85); margin-left: 8px;"></div>
-    <!-- Settings Button -->
-    <div id="settingsButton" class="pill" style="cursor: pointer;">
-      Settings
-    </div>
-  </div>
-
-  <!-- Settings Panel -->
-  <div id="settingsPanel" style="display: none;">
-    <div style="padding: 20px; background: rgba(8, 9, 12, 0.8); border-radius: 10px; width: 300px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);">
-      <h3 style="margin-top: 0; font-size: 20px; color: #fff;">Settings</h3>
-      <div>
-        <label style="color: #fff; display: block; margin-bottom: 8px;">Theme</label>
-        <select id="themeSelector" style="width: 100%; padding: 8px; border-radius: 8px; background: rgba(255, 255, 255, 0.1); color: #fff;">
-          <option value="dark">Dark</option>
-          <option value="light">Light</option>
-        </select>
-      </div>
-      <button id="closeSettings" style="margin-top: 16px; padding: 10px 16px; border-radius: 10px; background: rgba(255, 255, 255, 0.08); color: #fff;">Close</button>
-    </div>
   </div>
 
   <main>
@@ -372,7 +304,6 @@
     </section>
   </main>
 
-  <!-- Modal -->
   <div id="modal">
     <div style="width: 92%; max-width: 1100px; height: 80vh; border-radius: 12px; overflow: hidden; background: #07070b; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);">
       <button id="closeModal" style="position: absolute; right: 20px; top: 16px;">Close</button>
@@ -381,146 +312,116 @@
     </div>
   </div>
 
-  <script>
-    // ---------- Game list (embeds) ----------
-    let GAMES = [];
+<script>
+  let GAMES = [];
+  const grid = document.getElementById('grid');
+  const q = document.getElementById('q');
+  const modal = document.getElementById('modal');
+  const gameFrame = document.getElementById('gameFrame');
+  const closeModal = document.getElementById('closeModal');
+  const fullscreenButton = document.getElementById('fullscreenButton');
 
-    const grid = document.getElementById('grid');
-    const q = document.getElementById('q');
-    const modal = document.getElementById('modal');
-    const gameFrame = document.getElementById('gameFrame');
-    const closeModal = document.getElementById('closeModal');
-    const fullscreenButton = document.getElementById('fullscreenButton');
+  function createCard(game) {
+    const el = document.createElement('article');
+    el.className = 'card';
 
-    // ---------- Settings panel ----------
-    const settingsButton = document.getElementById('settingsButton');
-    const settingsPanel = document.getElementById('settingsPanel');
-    const closeSettingsButton = document.getElementById('closeSettings');
-    const themeSelector = document.getElementById('themeSelector');
+    const img = document.createElement('img');
+    img.className = 'thumb';
+    img.src = game.thumb;
+    img.alt = game.title;
 
-    // Open settings
-    settingsButton.addEventListener('click', () => {
-      settingsPanel.style.display = 'block';
+    const meta = document.createElement('div'); meta.className = 'meta';
+    const h3 = document.createElement('h3'); h3.textContent = game.title;
+    const btn = document.createElement('button'); btn.className = 'play'; btn.textContent = 'Play';
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openGame(game);
     });
 
-    // Close settings panel
-    closeSettingsButton.addEventListener('click', () => {
-      settingsPanel.style.display = 'none';
-    });
+    meta.appendChild(h3); meta.appendChild(btn);
+    el.appendChild(img); el.appendChild(meta);
 
-    // Change theme
-    themeSelector.addEventListener('change', (e) => {
-      const theme = e.target.value;
-      if (theme === 'light') {
-        document.documentElement.style.setProperty('--bg', '#f5f5f5');
-        document.documentElement.style.setProperty('--panel', 'rgba(0, 0, 0, 0.1)');
-        document.documentElement.style.setProperty('--accent1', '220 100% 60%'); // Light blue
-        document.documentElement.style.setProperty('--accent2', '280 100% 60%'); // Light purple
-        document.documentElement.style.setProperty('--accent3', '140 100% 40%'); // Light green
-        document.documentElement.style.setProperty('--highlight', '0 100% 50%'); // Lighter highlight
-      } else {
-        document.documentElement.style.setProperty('--bg', '#0d0d0d');
-        document.documentElement.style.setProperty('--panel', 'rgba(255, 255, 255, 0.1)');
-        document.documentElement.style.setProperty('--accent1', '220 88% 60%'); // Dark blue
-        document.documentElement.style.setProperty('--accent2', '280 88% 60%'); // Dark purple
-        document.documentElement.style.setProperty('--accent3', '140 75% 50%'); // Dark green
-        document.documentElement.style.setProperty('--highlight', '0 100% 70%'); // Brighter highlight
-      }
-    });
+    return el;
+  }
 
-    function createCard(game) {
-      const el = document.createElement('article');
-      el.className = 'card';
+  function render(filter='') {
+    grid.innerHTML = '';
+    GAMES.filter(g => g.title.toLowerCase().includes(filter.toLowerCase())).forEach(g => grid.appendChild(createCard(g)));
+  }
 
-      const img = document.createElement('img');
-      img.className = 'thumb';
-      img.src = game.thumb;
-      img.alt = game.title;
+  function openGame(game) {
+    fullscreenButton.style.display = 'block';
 
-      const meta = document.createElement('div'); meta.className = 'meta';
-      const h3 = document.createElement('h3'); h3.textContent = game.title;
-      const btn = document.createElement('button'); btn.className = 'play'; btn.textContent = 'Play';
-
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openGame(game);
-      });
-
-      meta.appendChild(h3); meta.appendChild(btn);
-      el.appendChild(img); el.appendChild(meta);
-
-      return el;
-    }
-
-    function render(filter='') {
-      grid.innerHTML = '';
-      GAMES.filter(g => g.title.toLowerCase().includes(filter.toLowerCase())).forEach(g => grid.appendChild(createCard(g)));
-    }
-
-    function openGame(game) {
-      fullscreenButton.style.display = 'block';
-
-      fetch(game.src)
-        .then(response => response.text())
-        .then(htmlContent => {
-          gameFrame.contentDocument.open();
-          gameFrame.contentDocument.write(htmlContent);
-          gameFrame.contentDocument.close();
-          modal.style.display = 'flex';
-        })
-        .catch(error => {
-          console.error('Error loading game content:', error);
-          gameFrame.contentDocument.open();
-          gameFrame.contentDocument.write(
-            `<div style="padding: 20px; color: white; background: #b91c1c; text-align: center; font-family: sans-serif; border-radius: 8px;">
-              <h2 style="margin-top: 0; color: white;">🛑 Error Loading Game 🛑</h2>
-              <p>Could not load game content. This usually happens when the host server sends the wrong file type.</p>
-            </div>`
-          );
-          gameFrame.contentDocument.close();
-        });
-    }
-
-    fullscreenButton.addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        if (document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen();
-        } else if (document.documentElement.mozRequestFullScreen) { // Firefox
-          document.documentElement.mozRequestFullScreen();
-        } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, Opera
-          document.documentElement.webkitRequestFullscreen();
-        } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
-          document.documentElement.msRequestFullscreen();
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.mozCancelFullScreen) { // Firefox
-          document.mozCancelFullScreen();
-        } else if (document.webkitExitFullscreen) { // Chrome, Safari, Opera
-          document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) { // IE/Edge
-          document.msExitFullscreen();
-        }
-      }
-    });
-
-    closeModal.addEventListener('click', () => {
-      modal.style.display = 'none';
-      gameFrame.src = '';
-      fullscreenButton.style.display = 'none';
-    });
-
-    q.addEventListener('input', () => render(q.value));
-
-    fetch('arcade_data.json')
-      .then(r => r.json())
-      .then(data => {
-        GAMES = data.games;
-        render();
+    fetch(game.src)
+      .then(response => response.text())
+      .then(htmlContent => {
+        gameFrame.contentDocument.open();
+        gameFrame.contentDocument.write(htmlContent);
+        gameFrame.contentDocument.close();
+        modal.style.display = 'flex';
       })
-      .catch(err => console.error('JSON load error', err));
+      .catch(error => {
+        console.error('Error loading game content:', error);
+        gameFrame.contentDocument.open();
+        gameFrame.contentDocument.write(
+          `<div style="padding: 20px; color: white; background: #b91c1c; text-align: center; font-family: sans-serif; border-radius: 8px;">
+            <h2 style="margin-top: 0; color: white;">🛑 Error Loading Game 🛑</h2>
+            <p>Could not load game content. This usually happens when the host server sends the wrong file type.</p>
+          </div>`
+        );
+        gameFrame.contentDocument.close();
+      });
+  }
 
-  </script>
+  fullscreenButton.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      } else if (document.documentElement.mozRequestFullScreen) {
+        document.documentElement.mozRequestFullScreen();
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen();
+      } else if (document.documentElement.msRequestFullscreen) {
+        document.documentElement.msRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    }
+  });
+
+  closeModal.addEventListener('click', () => {
+    modal.style.display = 'none';
+    gameFrame.src = '';
+    fullscreenButton.style.display = 'none';
+  });
+
+  q.addEventListener('input', () => render(q.value));
+
+  fetch('arcade_data.json')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      GAMES = data.games;
+      render();
+    })
+    .catch(err => {
+      console.error('Error loading JSON data:', err);
+      alert("There was an error loading the game data. Please check the console for more details.");
+    });
+
+</script>
 </body>
 </html>
