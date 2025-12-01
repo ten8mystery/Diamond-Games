@@ -16,6 +16,18 @@
       --accent3: 140 75% 50%; /* green */
       --highlight: 0 100% 70%; /* bright highlight color */
     }
+
+    /* Light theme */
+    .light-theme {
+      --bg: #f9f9f9;
+      --panel: rgba(0,0,0,0.1);
+      --glass: rgba(0,0,0,0.1);
+      --accent1: 200 88% 60%; /* blue */
+      --accent2: 0 88% 60%; /* red */
+      --accent3: 100 75% 50%; /* yellow */
+      --highlight: 40 100% 70%; /* bright highlight color */
+    }
+
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; background: var(--bg); color: #e6eef8; font-family: 'Poppins', system-ui, sans-serif; }
 
@@ -98,98 +110,41 @@
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(10px);
     }
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    .logo .mark {
-      width: 48px;
-      height: 48px;
-      border-radius: 10px;
-      box-shadow: 0 8px 30px rgba(145, 90, 255, 0.18);
-    }
-    .logo h1 {
-      font-size: 22px;
-      margin: 0;
-      font-weight: 600;
-    }
-    .hud .right {
-      margin-left: auto;
-      display: flex;
-      gap: 14px;
-    }
-    .pill {
-      padding: 10px 16px;
-      border-radius: 999px;
-      background: var(--panel);
-      border: 1px solid rgba(255, 255, 255, 0.03);
-      font-size: 14px;
-      display: inline-flex;
-      align-items: center;
-      font-weight: 500;
-    }
 
-    /* ---------- Hero Section ---------- */
-    .hero {
-      padding-top: 130px;
-      padding-bottom: 20px;
-      text-align: center;
-      z-index: 5;
-      position: relative;
-    }
-    .hero h2 {
-      font-size: 48px;
-      margin: 0 0 16px;
-      text-shadow: 0 8px 40px rgba(147, 51, 234, 0.15);
-      font-weight: 700;
-      color: var(--highlight);
-    }
-    .hero p {
-      margin: 0;
-      color: rgba(230, 238, 248, 0.75);
+    /* Settings Icon */
+    .settings-icon {
+      cursor: pointer;
       font-size: 18px;
-      line-height: 1.5;
+      color: rgba(230, 238, 248, 0.8);
     }
 
-    /* ---------- Search Bar ---------- */
-    .search-wrap {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    .search {
-      width: 720px;
-      max-width: 92%;
-      padding: 14px 20px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      background: var(--glass);
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      box-shadow: 0 10px 40px rgba(99, 102, 241, 0.05);
-    }
-    .search input {
-      flex: 1;
-      background: transparent;
-      border: 0;
-      color: inherit;
-      font-size: 16px;
-      outline: none;
-      font-weight: 500;
+    .settings-menu {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background: var(--panel);
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     }
 
-    /* ---------- Card Styling ---------- */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 26px;
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 0 20px;
-      z-index: 5;
+    .settings-menu button {
+      background: var(--accent1);
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      margin: 8px 0;
+      cursor: pointer;
+      transition: transform 150ms;
     }
+
+    .settings-menu button:hover {
+      transform: scale(1.05);
+    }
+
+    /* ---------- Card Hover Effect ---------- */
     .card {
       position: relative;
       overflow: hidden;
@@ -200,38 +155,10 @@
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
       transition: transform 250ms cubic-bezier(0.2, 0.9, 0.2, 1), box-shadow 250ms;
       will-change: transform, box-shadow, opacity;
-      transform-style: preserve-3d;
-      backface-visibility: hidden;
     }
-    .card .thumb {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      border-radius: 12px;
-      display: block;
-    }
-    .card .meta {
-      padding: 12px 8px;
-      text-align: center;
-    }
-    .card h3 {
-      margin: 0 0 10px;
-      font-size: 20px;
-      font-weight: 600;
-    }
-    .card .play {
-      display: inline-block;
-      padding: 12px 18px;
-      border-radius: 10px;
-      border: none;
-      color: white;
-      background: linear-gradient(90deg, hsl(var(--accent1)), hsl(var(--accent2)));
-      box-shadow: 0 10px 30px hsla(var(--accent1), 0.18);
-      cursor: pointer;
-      transition: transform 160ms, box-shadow 200ms;
-    }
-    .card .play:hover {
-      transform: translateY(-4px) scale(1.05);
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.05);
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 30px hsla(var(--accent2), 0.2);
     }
 
@@ -244,17 +171,6 @@
       align-items: center;
       background: rgba(2, 6, 23, 0.9);
       z-index: 60;
-    }
-    #modal button {
-      padding: 10px 16px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.08);
-      border: none;
-      color: #fff;
-      cursor: pointer;
-    }
-    #modal button:hover {
-      background: rgba(255, 255, 255, 0.12);
     }
 
     /* ---------- Small Screens ---------- */
@@ -289,6 +205,15 @@
     </div>
     <div class="pill" id="versionTag">v1.0</div>
     <div id="motd" style="font-size: 14px; color: rgba(230, 238, 248, 0.85); margin-left: 8px;"></div>
+    <!-- Settings Icon -->
+    <div class="settings-icon" id="settingsIcon">&#9881;</div>
+  </div>
+
+  <!-- Settings Menu -->
+  <div class="settings-menu" id="settingsMenu">
+    <button id="lightThemeButton">Light Theme</button>
+    <button id="darkThemeButton">Dark Theme</button>
+    <button id="customThemeButton">Custom Theme</button>
   </div>
 
   <main>
@@ -326,6 +251,11 @@
   const gameFrame = document.getElementById('gameFrame');
   const closeModal = document.getElementById('closeModal');
   const fullscreenButton = document.getElementById('fullscreenButton');
+  const settingsIcon = document.getElementById('settingsIcon');
+  const settingsMenu = document.getElementById('settingsMenu');
+  const lightThemeButton = document.getElementById('lightThemeButton');
+  const darkThemeButton = document.getElementById('darkThemeButton');
+  const customThemeButton = document.getElementById('customThemeButton');
 
   function createCard(game) {
     const el = document.createElement('article');
@@ -420,6 +350,31 @@
     })
     .catch(err => console.error('JSON load error', err));
 
+  // Settings Menu
+  settingsIcon.addEventListener('click', () => {
+    settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block';
+  });
+
+  lightThemeButton.addEventListener('click', () => {
+    document.documentElement.classList.remove('light-theme');
+    document.documentElement.classList.remove('dark-theme');
+    document.documentElement.classList.add('light-theme');
+    settingsMenu.style.display = 'none';
+  });
+
+  darkThemeButton.addEventListener('click', () => {
+    document.documentElement.classList.remove('light-theme');
+    document.documentElement.classList.remove('dark-theme');
+    document.documentElement.classList.add('dark-theme');
+    settingsMenu.style.display = 'none';
+  });
+
+  customThemeButton.addEventListener('click', () => {
+    document.documentElement.classList.remove('light-theme');
+    document.documentElement.classList.remove('dark-theme');
+    document.documentElement.classList.add('custom-theme');
+    settingsMenu.style.display = 'none';
+  });
 </script>
 </body>
 </html>
