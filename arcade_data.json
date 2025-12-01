@@ -1,0 +1,31 @@
+{
+  "games": [
+    {
+      "title": "2048",
+      "src": "https://play2048.co/",
+      "thumb": "https://via.placeholder.com/640x360?text=2048"
+    },
+    {
+      "title": "Run 3",
+      "src": "https://run3.io/",
+      "thumb": "https://via.placeholder.com/640x360?text=Run+3"
+    },
+    {
+      "title": "Tetris",
+      "src": "https://tetr.io",
+      "thumb": "https://via.placeholder.com/640x360?text=Tetris"
+    },
+    {
+      "title": "Snake",
+      "src": "https://playsnake.org/",
+      "thumb": "https://via.placeholder.com/640x360?text=Snake"
+    }
+  ],
+
+  "messages": [
+    "Welcome to Arcade Hub!",
+    "Neon vibes loaded.",
+    "Ready to play?",
+    "Arcade energy online."
+  ]
+}
