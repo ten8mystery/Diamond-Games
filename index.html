@@ -86,8 +86,8 @@
     <div class="logo">
       <div class="mark"></div>
       <div>
-        <h1>Arcade Hub</h1>
-        <div style="font-size:12px;color:rgba(230,238,248,0.7);">Dark Neon Edition</div>
+        <h1>Diamond</h1>
+        <div style="font-size:12px;color:rgba(230,238,248,0.7);">Upgraded Gaming</div>
       </div>
     </div>
 
@@ -157,9 +157,27 @@
   }
 
   function openGame(game){
-    // Set the game URL in iframe
-    gameFrame.src = game.src;
-    modal.style.display = 'flex';
+    // Fetch the raw HTML file from JSDelivr
+    fetch(game.src)
+      .then(response => response.text())
+      .then(htmlContent => {
+        // Inject the raw HTML content into the iframe
+        gameFrame.contentDocument.open();
+        gameFrame.contentDocument.write(htmlContent);
+        gameFrame.contentDocument.close();
+        modal.style.display = 'flex';
+      })
+      .catch(error => {
+        console.error('Error loading game content:', error);
+        gameFrame.contentDocument.open();
+        gameFrame.contentDocument.write(`
+          <div style="padding: 20px; color: white; background: #b91c1c; text-align: center; font-family: sans-serif; border-radius: 8px;">
+            <h2 style="margin-top: 0; color: white;">🛑 Error Loading Game 🛑</h2>
+            <p>Could not load game content. This usually happens when the host server sends the wrong file type.</p>
+          </div>
+        `);
+        gameFrame.contentDocument.close();
+      });
   }
 
   closeModal.addEventListener('click', () => {
