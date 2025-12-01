@@ -235,12 +235,6 @@
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 30px hsla(var(--accent2), 0.2);
     }
 
-    /* ---------- Hover Effect on Cards ---------- */
-    .card:hover {
-      transform: scale(1.05);  /* Slight scaling effect */
-      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5), 0 0 30px hsla(var(--accent1), 0.2); /* Adding a bigger shadow */
-    }
-
     /* ---------- Modal Styling ---------- */
     #modal {
       display: none;
@@ -275,14 +269,11 @@
   </style>
 </head>
 <body>
-  <!-- Particles canvas -->
   <canvas id="particles"></canvas>
-  <!-- Orbs -->
   <div class="orb orb--a"></div>
   <div class="orb orb--b"></div>
   <div class="orb orb--c"></div>
 
-  <!-- HUD -->
   <div class="hud">
     <div class="logo">
       <div class="mark">
@@ -313,7 +304,6 @@
     </section>
   </main>
 
-  <!-- Modal -->
   <div id="modal">
     <div style="width: 92%; max-width: 1100px; height: 80vh; border-radius: 12px; overflow: hidden; background: #07070b; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);">
       <button id="closeModal" style="position: absolute; right: 20px; top: 16px;">Close</button>
@@ -323,9 +313,7 @@
   </div>
 
 <script>
-  // ---------- Game list (embeds) ----------
   let GAMES = [];
-
   const grid = document.getElementById('grid');
   const q = document.getElementById('q');
   const modal = document.getElementById('modal');
@@ -377,10 +365,10 @@
         console.error('Error loading game content:', error);
         gameFrame.contentDocument.open();
         gameFrame.contentDocument.write(
-          <div style="padding: 20px; color: white; background: #b91c1c; text-align: center; font-family: sans-serif; border-radius: 8px;">
+          `<div style="padding: 20px; color: white; background: #b91c1c; text-align: center; font-family: sans-serif; border-radius: 8px;">
             <h2 style="margin-top: 0; color: white;">🛑 Error Loading Game 🛑</h2>
             <p>Could not load game content. This usually happens when the host server sends the wrong file type.</p>
-          </div>
+          </div>`
         );
         gameFrame.contentDocument.close();
       });
@@ -390,21 +378,21 @@
     if (!document.fullscreenElement) {
       if (document.documentElement.requestFullscreen) {
         document.documentElement.requestFullscreen();
-      } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+      } else if (document.documentElement.mozRequestFullScreen) {
         document.documentElement.mozRequestFullScreen();
-      } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, Opera
+      } else if (document.documentElement.webkitRequestFullscreen) {
         document.documentElement.webkitRequestFullscreen();
-      } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+      } else if (document.documentElement.msRequestFullscreen) {
         document.documentElement.msRequestFullscreen();
       }
     } else {
       if (document.exitFullscreen) {
         document.exitFullscreen();
-      } else if (document.mozCancelFullScreen) { // Firefox
+      } else if (document.mozCancelFullScreen) {
         document.mozCancelFullScreen();
-      } else if (document.webkitExitFullscreen) { // Chrome, Safari, Opera
+      } else if (document.webkitExitFullscreen) {
         document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) { // IE/Edge
+      } else if (document.msExitFullscreen) {
         document.msExitFullscreen();
       }
     }
@@ -419,12 +407,20 @@
   q.addEventListener('input', () => render(q.value));
 
   fetch('arcade_data.json')
-    .then(r => r.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
     .then(data => {
       GAMES = data.games;
       render();
     })
-    .catch(err => console.error('JSON load error', err));
+    .catch(err => {
+      console.error('Error loading JSON data:', err);
+      alert("There was an error loading the game data. Please check the console for more details.");
+    });
 
 </script>
 </body>
