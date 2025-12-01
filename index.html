@@ -134,7 +134,7 @@
     // Search event listener
     q.addEventListener('input', () => render(q.value));
 
-    // Fetching external JSON (game data)
+    // Fetching external JSON (game data) from JSDelivr
     fetch('https://cdn.jsdelivr.net/gh/yourusername/arcade-hub@main/arcade_data.json')
       .then(r => r.json())
       .then(data => {
