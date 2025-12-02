@@ -1,0 +1,14 @@
+{
+  "apps": [
+    {
+      "title": "App 1",
+      "thumb": "app1_thumb.jpg",
+      "src": "app1.html"
+    },
+    {
+      "title": "App 2",
+      "thumb": "app2_thumb.jpg",
+      "src": "app2.html"
+    }
+  ]
+}
