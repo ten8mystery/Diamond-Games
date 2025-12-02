@@ -6,9 +6,9 @@
       "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/179.html"
     },
     {
-      "title": "App 2",
-      "thumb": "app2_thumb.jpg",
-      "src": "app2.html"
+      "title": "ChatGPT",
+      "thumb": "https://static.vecteezy.com/system/resources/previews/021/059/825/non_2x/chatgpt-logo-chat-gpt-icon-on-green-background-free-vector.jpg",
+      "src": "https://raw.githubusercontent.com/ten8mystery/ScramGPT/refs/heads/main/index.html"
     }
   ]
 }
