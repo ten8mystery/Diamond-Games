@@ -213,7 +213,7 @@
       .then(data => {
         GAMES = data.games;
         render(GAMES);
-        updateGamesCount(); // Update the count after games are loaded
+        updateCount(); // Update count for games
       })
       .catch(err => console.error('JSON load error', err));
   }
@@ -225,6 +225,7 @@
       .then(data => {
         APPS = data.apps;
         render(APPS);
+        updateCount(); // Update count for apps
       })
       .catch(err => console.error('JSON load error', err));
   }
@@ -286,13 +287,10 @@
   });
 
   q.addEventListener('input', () => {
-    let filteredGames = GAMES.filter(item => item.title.toLowerCase().includes(q.value.toLowerCase()));
-    if (gamesTab.classList.contains('active')) {
-      render(filteredGames);
-      updateGamesCount(); // Update the count after filtering
-    } else if (appsTab.classList.contains('active')) {
-      render(APPS);
-    }
+    let filteredItems = gamesTab.classList.contains('active') ? GAMES : APPS;
+    filteredItems = filteredItems.filter(item => item.title.toLowerCase().includes(q.value.toLowerCase()));
+    render(filteredItems);
+    updateCount(); // Update count after filtering
   });
 
   // Tab Switch Functionality
@@ -312,9 +310,10 @@
   gamesTab.classList.add('active');
   loadGames();
 
-  // Function to update the games count
-  function updateGamesCount() {
-    gamesCountElement.textContent = `Games: ${GAMES.length}`;
+  // Function to update the count based on active tab
+  function updateCount() {
+    const itemCount = gamesTab.classList.contains('active') ? GAMES.length : APPS.length;
+    gamesCountElement.textContent = `Count: ${itemCount}`;
   }
 </script>
 </body>
