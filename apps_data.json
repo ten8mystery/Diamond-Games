@@ -1,9 +1,9 @@
 {
   "apps": [
     {
-      "title": "App 1",
-      "thumb": "app1_thumb.jpg",
-      "src": "app1.html"
+      "title": "Soundboard",
+      "thumb": "https://play-lh.googleusercontent.com/v_5LsSgLe8lMcmmKc1uYMPkaOkM3JVVkl_IvQ8m9iim5Z8Pw80MgvMyA_zc2QvVs6zA",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/179.html"
     },
     {
       "title": "App 2",
