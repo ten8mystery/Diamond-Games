@@ -193,27 +193,30 @@
   will-change: transform, box-shadow, opacity;
   transform-style: preserve-3d;
   backface-visibility: hidden;
-  max-width: 100%; /* Ensure cards stay within grid container */
+  height: auto; /* Ensure no height stretching */
+  width: 100%; /* Allow the card to fill the container without stretching */
+  max-width: 100%; /* Don't exceed the width of the container */
   transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
-  z-index: 0; /* Keep card order in place */
+  z-index: 0; /* Ensure card order stays intact */
 }
 
-/* Hover Effect (make sure scaling is subtle and not too big) */
+/* Hover Effect */
 .card:hover {
-  transform: translateY(-5px) scale(1.02); /* Slight upward movement & smaller scale */
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 30px hsla(var(--accent2), 0.2); /* Enhanced shadow */
-  background: rgba(8, 9, 12, 0.95); /* Darken background */
+  transform: translateY(-5px) scale(1.02); /* Subtle upward movement & scaling */
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 30px hsla(var(--accent2), 0.2); /* Shadow effect */
+  background: rgba(8, 9, 12, 0.95); /* Darken background slightly */
 }
 
-/* ---------- Grid Layout (ensure responsive behavior) ---------- */
+/* ---------- Grid Layout (responsive) ---------- */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Responsive grid layout */
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Auto-fill with min width of 240px */
   gap: 26px;
   max-width: 1200px;
   margin: 40px auto;
   padding: 0 20px;
   z-index: 5;
+  align-items: start; /* Align items at the top to prevent vertical stretching */
 }
 
 /* ---------- Card Content (meta and play button) ---------- */
@@ -244,6 +247,7 @@
   transform: translateY(-4px) scale(1.05);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 30px hsla(var(--accent2), 0.2);
 }
+
 
     /* ---------- Modal Styling ---------- */
     #modal {
