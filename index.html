@@ -271,12 +271,12 @@
       .catch(error => {
         console.error('Error loading item content:', error);
         gameFrame.contentDocument.open();
-        gameFrame.contentDocument.write(
+        gameFrame.contentDocument.write(`
           <div style="padding: 20px; color: white; background: #b91c1c; text-align: center; font-family: sans-serif; border-radius: 8px;">
             <h2 style="margin-top: 0; color: white;">🛑 Error Loading Item 🛑</h2>
             <p>Could not load content. This usually happens when the host server sends the wrong file type.</p>
           </div>
-        );
+        `);
         gameFrame.contentDocument.close();
       });
   }
@@ -313,7 +313,7 @@
   // Function to update the count based on active tab
   function updateCount() {
     const itemCount = gamesTab.classList.contains('active') ? GAMES.length : APPS.length;
-    gamesCountElement.textContent = Count: ${itemCount};
+    gamesCountElement.textContent = `Count: ${itemCount}`;
   }
 </script>
 </body>
