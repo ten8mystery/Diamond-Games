@@ -347,6 +347,7 @@
 
   function render(filter='') {
     grid.innerHTML = '';
+    console.log("Rendering games with filter:", filter); // Debugging
     GAMES.filter(g => g.title.toLowerCase().includes(filter.toLowerCase())).forEach(g => grid.appendChild(createCard(g)));
   }
 
@@ -365,10 +366,10 @@
         console.error('Error loading game content:', error);
         gameFrame.contentDocument.open();
         gameFrame.contentDocument.write(
-          <div style="padding: 20px; color: white; background: #b91c1c; text-align: center; font-family: sans-serif; border-radius: 8px;">
+          `<div style="padding: 20px; color: white; background: #b91c1c; text-align: center; font-family: sans-serif; border-radius: 8px;">
             <h2 style="margin-top: 0; color: white;">🛑 Error Loading Game 🛑</h2>
             <p>Could not load game content. This usually happens when the host server sends the wrong file type.</p>
-          </div>
+          </div>`
         );
         gameFrame.contentDocument.close();
       });
@@ -415,13 +416,13 @@
     })
     .then(data => {
       GAMES = data.games;
+      console.log(GAMES); // Debugging
       render();
     })
     .catch(err => {
       console.error('Error loading JSON data:', err);
       alert("There was an error loading the game data. Please check the console for more details.");
     });
-
 </script>
 </body>
 </html>
