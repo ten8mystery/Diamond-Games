@@ -169,6 +169,26 @@
       "title": "Five Nights at Freddy's Ultimate Custom Night",
       "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/192.html",
       "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/192.png"
-    }
+    },
+   {
+      "title": "Five Nights at Candy's",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/503.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/503.png"
+    },
+   {
+      "title": "Five Nights at Candy's 2",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/504.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/504.png"
+    },
+   {
+      "title": "Cuphead",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/465.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/465.png"
+    },
+   {
+      "title": "Subway Surfers: Barcelona",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/131.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/131.png"
+    },
   ]
 }
