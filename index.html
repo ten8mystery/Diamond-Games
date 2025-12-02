@@ -7,320 +7,94 @@
   <link rel="icon" href="favicon.png" type="image/png">
   <style>
     /* ---------- Root & Reset ---------- */
-    :root {
-      --bg: #0d0d0d;
-      --panel: rgba(255,255,255,0.1);
-      --glass: rgba(255,255,255,0.1);
+    :root{
+      --bg:#030308;
+      --panel: rgba(255,255,255,0.03);
+      --glass: rgba(255,255,255,0.04);
       --accent1: 220 88% 60%; /* blue */
       --accent2: 280 88% 60%; /* purple */
       --accent3: 140 75% 50%; /* green */
-      --highlight: 0 100% 70%; /* bright highlight color */
     }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; background: var(--bg); color: #e6eef8; font-family: 'Poppins', system-ui, sans-serif; }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:var(--bg);color:#e6eef8;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
 
     /* ---------- Animated background canvas (particles) ---------- */
-    canvas#particles {
-      position: fixed;
-      inset: 0;
-      z-index: -2;
-      pointer-events: none;
-      will-change: transform;
-    }
+    /* place canvas behind everything to avoid repainting issues during scroll */
+    canvas#particles{position:fixed;inset:0;z-index:-2;pointer-events:none;will-change:transform}
 
     /* ---------- Moving orbs ---------- */
-    .orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(150px);
-      opacity: 0.9;
-      mix-blend-mode: screen;
-      z-index: -1;
-      pointer-events: none;
-    }
-    .orb.orb--a {
-      width: 600px;
-      height: 600px;
-      left: -10%;
-      top: -8%;
-      background: radial-gradient(circle at 30% 30%, hsla(var(--accent1), 0.85) 0%, transparent 50%);
-      animation: orbA 18s ease-in-out infinite;
-    }
-    .orb.orb--b {
-      width: 580px;
-      height: 580px;
-      right: -8%;
-      bottom: -10%;
-      background: radial-gradient(circle at 70% 70%, hsla(var(--accent2), 0.85) 0%, transparent 50%);
-      animation: orbB 20s ease-in-out infinite;
-    }
-    .orb.orb--c {
-      width: 540px;
-      height: 540px;
-      left: 12%;
-      bottom: -14%;
-      background: radial-gradient(circle at 60% 40%, hsla(var(--accent3), 0.85) 0%, transparent 50%);
-      animation: orbC 24s ease-in-out infinite;
-    }
-
-    @keyframes orbA {
-      0% { transform: translate(0,0); }
-      50% { transform: translate(70px, -40px); }
-      100% { transform: translate(0,0); }
-    }
-    @keyframes orbB {
-      0% { transform: translate(0,0); }
-      50% { transform: translate(-60px, 50px); }
-      100% { transform: translate(0,0); }
-    }
-    @keyframes orbC {
-      0% { transform: translate(0,0); }
-      50% { transform: translate(40px, 60px); }
-      100% { transform: translate(0,0); }
-    }
+    .orb{position:fixed;border-radius:50%;filter:blur(120px);opacity:0.95;mix-blend-mode:screen;z-index:-1;pointer-events:none}
+    .orb.orb--a{width:540px;height:540px;left:-8%;top:-6%;background:radial-gradient(circle at 30% 30%, hsla(var(--accent1),0.95) 0%, transparent 50%);animation:orbA 18s ease-in-out infinite}
+    .orb.orb--b{width:520px;height:520px;right:-6%;bottom:-8%;background:radial-gradient(circle at 70% 70%, hsla(var(--accent2),0.95) 0%, transparent 50%);animation:orbB 20s ease-in-out infinite}
+    .orb.orb--c{width:480px;height:480px;left:10%;bottom:-12%;background:radial-gradient(circle at 60% 40%, hsla(var(--accent3),0.9) 0%, transparent 50%);animation:orbC 24s ease-in-out infinite}
+    @keyframes orbA{0%{transform:translate(0,0)}50%{transform:translate(70px,-40px)}100%{transform:translate(0,0)}}
+    @keyframes orbB{0%{transform:translate(0,0)}50%{transform:translate(-60px,50px)}100%{transform:translate(0,0)}}
+    @keyframes orbC{0%{transform:translate(0,0)}50%{transform:translate(40px,60px)}100%{transform:translate(0,0)}}
 
     /* ---------- HUD Navbar ---------- */
-    .hud {
-      position: fixed;
-      top: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 30;
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      width: 92%;
-      max-width: 1200px;
-      padding: 14px 18px;
-      border-radius: 16px;
-      background: linear-gradient(90deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(10px);
-    }
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    .logo .mark {
-      width: 48px;
-      height: 48px;
-      border-radius: 10px;
-      box-shadow: 0 8px 30px rgba(145, 90, 255, 0.18);
-    }
-    .logo h1 {
-      font-size: 22px;
-      margin: 0;
-      font-weight: 600;
-    }
-    .hud .right {
-      margin-left: auto;
-      display: flex;
-      gap: 14px;
-    }
-    .pill {
-      padding: 10px 16px;
-      border-radius: 999px;
-      background: var(--panel);
-      border: 1px solid rgba(255, 255, 255, 0.03);
-      font-size: 14px;
-      display: inline-flex;
-      align-items: center;
-      font-weight: 500;
-    }
+    .hud{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:30;display:flex;align-items:center;gap:14px;width:92%;max-width:1200px;padding:10px 16px;border-radius:14px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);box-shadow:0 10px 40px rgba(0,0,0,0.6);backdrop-filter:blur(8px)}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo .mark{width:40px;height:40px;border-radius:9px;box-shadow:0 8px 30px rgba(145,90,255,0.18)}
+    .logo h1{font-size:18px;margin:0}
+    .hud .right{margin-left:auto;display:flex;gap:10px}
+    .pill{padding:8px 12px;border-radius:999px;background:var(--panel);border:1px solid rgba(255,255,255,0.03);font-size:13px;display:inline-flex;align-items:center;}
 
-    /* ---------- Hero Section ---------- */
-    .hero {
-      padding-top: 130px;
-      padding-bottom: 20px;
-      text-align: center;
-      z-index: 5;
-      position: relative;
-    }
-    .hero h2 {
-      font-size: 48px;
-      margin: 0 0 16px;
-      text-shadow: 0 8px 40px rgba(147, 51, 234, 0.15);
-      font-weight: 700;
-      color: var(--highlight);
-    }
-    .hero p {
-      margin: 0;
-      color: rgba(230, 238, 248, 0.75);
-      font-size: 18px;
-      line-height: 1.5;
-    }
+    /* ---------- Hero ---------- */
+    .hero{padding-top:110px;padding-bottom:18px;text-align:center;z-index:5;position:relative}
+    .hero h2{font-size:40px;margin:0 0 8px;text-shadow:0 8px 40px rgba(147,51,234,0.12)}
+    .hero p{margin:0;color:rgba(230,238,248,0.75)}
 
-    /* ---------- Search Bar ---------- */
-    .search-wrap {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    .search {
-      width: 720px;
-      max-width: 92%;
-      padding: 14px 20px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      background: var(--glass);
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      box-shadow: 0 10px 40px rgba(99, 102, 241, 0.05);
-    }
-    .search input {
-      flex: 1;
-      background: transparent;
-      border: 0;
-      color: inherit;
-      font-size: 16px;
-      outline: none;
-      font-weight: 500;
-    }
+    /* ---------- Search bar ---------- */
+    .search-wrap{display:flex;justify-content:center;margin-top:18px}
+    .search{width:680px;max-width:92%;padding:12px 18px;border-radius:999px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);display:flex;gap:10px;align-items:center;box-shadow:0 10px 40px rgba(99,102,241,0.04)}
+    .search input{flex:1;background:transparent;border:0;color:inherit;font-size:16px;outline:none}
 
-/* ---------- Card Styling ---------- */
-.card {
-  position: relative;
-  overflow: hidden;
-  border-radius: 16px;
-  background: rgba(8, 9, 12, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
-  transition: transform 250ms cubic-bezier(0.2, 0.9, 0.2, 1), box-shadow 250ms, background 250ms;
-  will-change: transform, box-shadow, opacity;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  height: auto;
-  max-width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start; /* Align content at the top */
-}
+    /* ---------- Grid ---------- */
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;max-width:1200px;margin:36px auto;padding:0 18px;z-index:5}
 
-/* Maintain consistent aspect ratio (16:9) */
-.card::before {
-  content: '';
-  display: block;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-  width: 100%;
-}
+    /* ---------- Card ---------- */
+    .card{position:relative;overflow:hidden;border-radius:14px;padding:12px;background:rgba(8,9,12,0.8);border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 30px rgba(0,0,0,0.6);transition:transform 260ms cubic-bezier(.2,.9,.2,1), box-shadow 260ms;will-change:transform,box-shadow,opacity;transform-style:preserve-3d;backface-visibility:hidden}
+    .card .thumb{width:100%;height:150px;object-fit:cover;border-radius:10px;display:block}
+    .card .meta{padding:12px 6px;text-align:center}
+    .card h3{margin:0 0 8px 0;font-size:18px}
+    .card .play{display:inline-block;padding:10px 14px;border-radius:10px;border:none;color:white;background:linear-gradient(90deg,hsl(var(--accent1)),hsl(var(--accent2)));box-shadow:0 10px 30px hsla(var(--accent1),0.18);cursor:pointer;transition:transform 160ms}
+    .card .play:hover{transform:translateY(-4px) scale(1.03)}
 
-.card .thumb {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Ensure the image fills the space */
-  border-radius: 16px;
-  background-size: cover;
-  background-position: center;
-}
+    /* prevent white/rainbow :hover flash by overriding pseudo-elements */
+    .card::before,.card::after{content:'';position:absolute;inset:0;border-radius:14px;pointer-events:none;transition:opacity .25s, filter .25s}
+    .card::before{background:linear-gradient(90deg, rgba(0,0,0,0.25), rgba(0,0,0,0.15));mix-blend-mode:normal;opacity:1}
+    .card:hover::before{opacity:1;filter:brightness(0.9)}
 
-/* Hover Effect */
-.card:hover {
-  transform: translateY(-5px) scale(1.02); /* Subtle upward movement & scaling */
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 30px hsla(var(--accent2), 0.2); /* Shadow effect */
-  background: rgba(8, 9, 12, 0.95); /* Darken background slightly */
-}
+    /* keep hover dark */
+    .card:hover{transform:translateY(-8px) scale(1.03);box-shadow:0 30px 60px rgba(0,0,0,0.6),0 0 30px hsla(var(--accent2),0.18)}
 
-/* ---------- Grid Layout (responsive) ---------- */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Auto-fill with min width of 240px */
-  gap: 26px;
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 0 20px;
-  z-index: 5;
-  align-items: start; /* Align items at the top to prevent vertical stretching */
-}
-
-/* ---------- Card Content (meta and play button) ---------- */
-.card .meta {
-  padding: 12px 8px;
-  text-align: center;
-  background: rgba(8, 9, 12, 0.9); /* Ensure meta content has a consistent background */
-  border-radius: 0 0 16px 16px; /* Rounded corners at bottom */
-  position: relative;
-  z-index: 1; /* Ensure it's above the image */
-}
-
-.card h3 {
-  margin: 0 0 10px;
-  font-size: 20px;
-  font-weight: 600;
-  color: white;
-}
-
-.card .play {
-  display: inline-block;
-  padding: 12px 18px;
-  border-radius: 10px;
-  border: none;
-  color: white;
-  background: linear-gradient(90deg, hsl(var(--accent1)), hsl(var(--accent2)));
-  box-shadow: 0 10px 30px hsla(var(--accent1), 0.18);
-  cursor: pointer;
-  transition: transform 160ms, box-shadow 200ms;
-}
-
-.card .play:hover {
-  transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 30px hsla(var(--accent2), 0.2);
-}
-
-    /* ---------- Modal Styling ---------- */
-    #modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      justify-content: center;
-      align-items: center;
-      background: rgba(2, 6, 23, 0.9);
-      z-index: 60;
-    }
-    #modal button {
-      padding: 10px 16px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.08);
-      border: none;
-      color: #fff;
-      cursor: pointer;
-    }
-    #modal button:hover {
-      background: rgba(255, 255, 255, 0.12);
-    }
-
-    /* ---------- Small Screens ---------- */
-    @media (max-width: 640px) {
-      .hero h2 {
-        font-size: 32px;
-      }
-      .search {
-        width: 92%;
-      }
-    }
+    /* small screens */
+    @media (max-width:640px){.hero h2{font-size:26px}.search{width:92%}}
+    body::before{content:'';position:fixed;inset:0;z-index:-3;background:var(--bg);}
   </style>
 </head>
 <body>
+  <!-- Particles canvas -->
   <canvas id="particles"></canvas>
+  <!-- Orbs -->
   <div class="orb orb--a"></div>
   <div class="orb orb--b"></div>
   <div class="orb orb--c"></div>
 
+  <!-- HUD -->
   <div class="hud">
     <div class="logo">
       <div class="mark">
-        <img src="favicon.png" alt="Logo" style="width: 48px; height: 48px; border-radius: 10px;">
+        <img src="favicon.png" alt="Logo" style="width: 40px; height: 40px; border-radius: 9px;">
       </div>
       <div>
         <h1>Diamond</h1>
-        <div style="font-size: 14px; color: rgba(230, 238, 248, 0.7);">Upgraded Gaming</div>
+        <div style="font-size:12px;color:rgba(230,238,248,0.7);">Upgraded Gaming</div>
       </div>
     </div>
+
     <div class="pill" id="versionTag">v1.0</div>
-    <div id="motd" style="font-size: 14px; color: rgba(230, 238, 248, 0.85); margin-left: 8px;"></div>
+    <div id="motd" style="font-size:13px;color:rgba(230,238,248,0.85);margin-left:8px;"></div>
   </div>
 
   <main>
@@ -328,9 +102,7 @@
       <h2>Diamond — Upgraded Gaming</h2>
       <p>Jump into any game, online, for free!</p>
       <div class="search-wrap">
-        <div class="search">
-          <input id="q" placeholder="Search games..." />
-        </div>
+        <div class="search"><input id="q" placeholder="Search games..." /></div>
       </div>
     </section>
 
@@ -339,24 +111,25 @@
     </section>
   </main>
 
-  <div id="modal">
-    <div style="width: 92%; max-width: 1100px; height: 80vh; border-radius: 12px; overflow: hidden; background: #07070b; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);">
-      <button id="closeModal" style="position: absolute; right: 20px; top: 16px;">Close</button>
-      <button id="fullscreenButton" style="position: absolute; left: 20px; top: 16px; display: none;">Fullscreen</button>
-      <iframe id="gameFrame" style="width: 100%; height: 100%; border: none" sandbox="allow-scripts allow-same-origin allow-pointer-lock"></iframe>
+  <!-- Modal -->
+  <div id="modal" style="display:none;position:fixed;inset:0;justify-content:center;align-items:center;background:rgba(2,6,23,0.8);z-index:60">
+    <div style="width:92%;max-width:1100px;height:80vh;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);box-shadow:0 30px 80px rgba(0,0,0,0.6);background:#07070b">
+      <button id="closeModal" style="position:absolute;right:20px;top:16px;z-index:70;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.06);border:none;color:#fff;cursor:pointer">Close</button>
+      <iframe id="gameFrame" style="width:100%;height:100%;border:none" sandbox="allow-scripts allow-same-origin allow-pointer-lock"></iframe>
     </div>
   </div>
 
 <script>
+  // ---------- Game list (embeds) ----------
   let GAMES = [];
+
   const grid = document.getElementById('grid');
   const q = document.getElementById('q');
   const modal = document.getElementById('modal');
   const gameFrame = document.getElementById('gameFrame');
   const closeModal = document.getElementById('closeModal');
-  const fullscreenButton = document.getElementById('fullscreenButton');
 
-  function createCard(game) {
+  function createCard(game){
     const el = document.createElement('article');
     el.className = 'card';
 
@@ -380,18 +153,17 @@
     return el;
   }
 
-  function render(filter='') {
+  function render(filter=''){
     grid.innerHTML = '';
-    console.log("Rendering games with filter:", filter); // Debugging
     GAMES.filter(g => g.title.toLowerCase().includes(filter.toLowerCase())).forEach(g => grid.appendChild(createCard(g)));
   }
 
-  function openGame(game) {
-    fullscreenButton.style.display = 'block';
-
+  function openGame(game){
+    // Fetch the raw HTML file from JSDelivr
     fetch(game.src)
       .then(response => response.text())
       .then(htmlContent => {
+        // Inject the raw HTML content into the iframe
         gameFrame.contentDocument.open();
         gameFrame.contentDocument.write(htmlContent);
         gameFrame.contentDocument.close();
@@ -400,64 +172,32 @@
       .catch(error => {
         console.error('Error loading game content:', error);
         gameFrame.contentDocument.open();
-        gameFrame.contentDocument.write(
-          `<div style="padding: 20px; color: white; background: #b91c1c; text-align: center; font-family: sans-serif; border-radius: 8px;">
+        gameFrame.contentDocument.write(`
+          <div style="padding: 20px; color: white; background: #b91c1c; text-align: center; font-family: sans-serif; border-radius: 8px;">
             <h2 style="margin-top: 0; color: white;">🛑 Error Loading Game 🛑</h2>
             <p>Could not load game content. This usually happens when the host server sends the wrong file type.</p>
-          </div>`
-        );
+          </div>
+        `);
         gameFrame.contentDocument.close();
       });
   }
 
-  fullscreenButton.addEventListener('click', () => {
-    if (!document.fullscreenElement) {
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen();
-      } else if (document.documentElement.mozRequestFullScreen) {
-        document.documentElement.mozRequestFullScreen();
-      } else if (document.documentElement.webkitRequestFullscreen) {
-        document.documentElement.webkitRequestFullscreen();
-      } else if (document.documentElement.msRequestFullscreen) {
-        document.documentElement.msRequestFullscreen();
-      }
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
-      }
-    }
-  });
-
   closeModal.addEventListener('click', () => {
     modal.style.display = 'none';
     gameFrame.src = '';
-    fullscreenButton.style.display = 'none';
   });
 
   q.addEventListener('input', () => render(q.value));
 
+  // Load external JSON
   fetch('arcade_data.json')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
+    .then(r => r.json())
     .then(data => {
       GAMES = data.games;
-      console.log(GAMES); // Debugging
       render();
     })
-    .catch(err => {
-      console.error('Error loading JSON data:', err);
-      alert("There was an error loading the game data. Please check the console for more details.");
-    });
+    .catch(err => console.error('JSON load error', err));
+
 </script>
 </body>
 </html>
