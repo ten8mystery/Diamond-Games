@@ -1,0 +1,44 @@
+{
+  "themes": [
+    {
+      "name": "Default",
+      "--bg": "#030308",
+      "--panel": "rgba(255,255,255,0.03)",
+      "--glass": "rgba(255,255,255,0.04)",
+      "--accent1": "220 88% 60%", /* blue */
+      "--accent2": "280 88% 60%", /* purple */
+      "--accent3": "140 75% 50%", /* green */
+      "--text-color": "#e6eef8" /* default text color */
+    },
+    {
+      "name": "Blood",
+      "--bg": "#4f0000",
+      "--panel": "rgba(255,0,0,0.1)",
+      "--glass": "rgba(255,0,0,0.1)",
+      "--accent1": "0 100% 50%", /* red */
+      "--accent2": "0 100% 70%", /* bright red */
+      "--accent3": "360 75% 50%", /* dark red */
+      "--text-color": "#e6eef8" /* white text */
+    },
+    {
+      "name": "Emerald",
+      "--bg": "#002b1f",
+      "--panel": "rgba(0,255,0,0.1)",
+      "--glass": "rgba(0,255,0,0.1)",
+      "--accent1": "140 75% 50%", /* green */
+      "--accent2": "140 80% 60%", /* bright green */
+      "--accent3": "100 80% 50%", /* dark green */
+      "--text-color": "#e6eef8" /* white text */
+    },
+    {
+      "name": "Iron",
+      "--bg": "#1e1e1e",
+      "--panel": "rgba(255,255,255,0.15)",
+      "--glass": "rgba(255,255,255,0.2)",
+      "--accent1": "0 0% 80%", /* light grey */
+      "--accent2": "0 0% 60%", /* grey */
+      "--accent3": "0 0% 50%", /* dark grey */
+      "--text-color": "#e6eef8" /* white text */
+    }
+  ]
+}
