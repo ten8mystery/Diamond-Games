@@ -181,9 +181,6 @@
         <h3>Settings</h3>
         <label for="volumeControl">Volume:</label>
         <input id="volumeControl" type="range" min="0" max="100" value="50" style="width:100%">
-        <br><br>
-        <label for="bgColor">Background Color:</label>
-        <input id="bgColor" type="color" value="#add8e6">
       </div>
     </div>
   </div>
@@ -226,44 +223,12 @@
     const settingsModal = document.getElementById('settingsModal');
     const closeSettings = document.getElementById('closeSettings');
     const volumeControl = document.getElementById('volumeControl');
-    const bgColorPicker = document.getElementById('bgColor');
-
-    // Default color values
-    const defaultBgColor = '#add8e6'; // Default background color (light blue)
-    const defaultAccent1 = '220 88% 60%'; // Default accent color 1 (blue)
-    const defaultAccent2 = '280 88% 60%'; // Default accent color 2 (purple)
-    const defaultAccent3 = '140 75% 50%'; // Default accent color 3 (green)
-
-    // Update the background color and adjust the other colors dynamically
-    function updateColors(backgroundColor) {
-      document.documentElement.style.setProperty('--bg', backgroundColor);
-
-      // Calculate accent colors based on background color (or reset to defaults)
-      if (backgroundColor === defaultBgColor) {
-        document.documentElement.style.setProperty('--accent1', defaultAccent1);
-        document.documentElement.style.setProperty('--accent2', defaultAccent2);
-        document.documentElement.style.setProperty('--accent3', defaultAccent3);
-        document.documentElement.style.setProperty('--textColor', '#e6eef8'); // Default text color
-      } else {
-        // For example: adjust HSL values to keep the theme visually balanced
-        document.documentElement.style.setProperty('--accent1', '210 88% 65%'); // Lighter blue
-        document.documentElement.style.setProperty('--accent2', '260 88% 65%'); // Lighter purple
-        document.documentElement.style.setProperty('--accent3', '150 75% 55%'); // Lighter green
-        document.documentElement.style.setProperty('--textColor', '#000000'); // Darker text color
-      }
-    }
 
     // Volume Control
     volumeControl.addEventListener('input', (e) => {
       const volume = e.target.value;
       // Adjust volume or implement audio control logic here (example: adjust sound in games)
       console.log('Volume:', volume);
-    });
-
-    // Background Color Change
-    bgColorPicker.addEventListener('input', (e) => {
-      const bgColor = e.target.value;
-      updateColors(bgColor);
     });
 
     // Show Settings Modal
