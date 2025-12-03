@@ -54,11 +54,11 @@
       gap: 12px; /* Less gap between buttons */
     }
     .hud button{
-      padding: 6px 14px; /* Reduced padding for smaller buttons */
+      padding: 8px 20px; /* Increased padding for pill shape */
       font-size: 14px; /* Smaller button font */
       font-weight: 600;
       border: none;
-      border-radius: 12px;
+      border-radius: 50px; /* Rounded corners for pill shape */
       background: linear-gradient(145deg, var(--accent1), var(--accent2));
       color: white;
       cursor: pointer;
@@ -114,6 +114,14 @@
       padding: 8px 12px;
       outline: none;
       border-radius: 50px;
+    }
+
+    /* ---------- Count below Search Bar Styles ---------- */
+    .count {
+      margin-top: 20px;
+      font-size: 16px;
+      color: white;
+      font-weight: bold;
     }
 
     /* ---------- Grid Styles ---------- */
@@ -205,6 +213,9 @@
         <div class="search"><input id="q" placeholder="Search..." /></div>
       </div>
     </section>
+
+    <!-- Count below search bar -->
+    <div class="count" id="gamesCount">Games: 0</div>
 
     <section class="grid" id="grid">
       <!-- cards injected by JS -->
@@ -347,7 +358,7 @@
     // Function to update the count based on active tab
     function updateCount() {
       const itemCount = gamesTab.classList.contains('active') ? GAMES.length : APPS.length;
-      gamesCountElement.textContent = `Count: ${itemCount}`;
+      gamesCountElement.textContent = `Games: ${itemCount}`;
     }
   </script>
 </body>
