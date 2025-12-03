@@ -82,9 +82,6 @@
     /* ---------- Grid ---------- */
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;max-width:1200px;margin:36px auto;padding:0 18px;z-index:5}
 
-    /* Featured Games Grid */
-    .grid-featured{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;max-width:1200px;margin:36px auto;padding:0 18px;}
-
     /* ---------- Card ---------- */
     .card {
       position: relative;
@@ -172,14 +169,6 @@
       </div>
     </section>
 
-    <!-- Featured Games Section -->
-    <section class="featured-section">
-      <h2>Featured Games</h2>
-      <div class="grid-featured" id="featured-grid">
-        <!-- Featured games will be injected here -->
-      </div>
-    </section>
-
     <section class="grid" id="grid">
       <!-- Regular games injected by JS -->
     </section>
@@ -199,7 +188,6 @@
   let APPS = [];
 
   const grid = document.getElementById('grid');
-  const featuredGrid = document.getElementById('featured-grid');
   const q = document.getElementById('q');
   const modal = document.getElementById('modal');
   const gameFrame = document.getElementById('gameFrame');
@@ -207,12 +195,6 @@
   const gamesTab = document.getElementById('gamesTab');
   const appsTab = document.getElementById('appsTab');
   const gamesCountElement = document.getElementById('gamesCount');
-
-  // Define your featured games by title (this is just an example)
-  const FEATURED_GAMES = [
-    'Game 1', 'Game 2', 'Game 3', 'Game 4', 'Game 5',
-    'Game 6', 'Game 7', 'Game 8', 'Game 9', 'Game 10'
-  ];
 
   function loadApps() {
     fetch('apps_data.json')
@@ -234,26 +216,10 @@
         // Sort games alphabetically by title
         GAMES.sort((a, b) => a.title.localeCompare(b.title));
 
-        // Get featured games based on the titles
-        const featuredGames = GAMES.filter(game => FEATURED_GAMES.includes(game.title));
-
-        // Get remaining games (non-featured)
-        const remainingGames = GAMES.filter(game => !FEATURED_GAMES.includes(game.title));
-
-        // Combine featured games and remaining games
-        const allGames = [...featuredGames, ...remainingGames];
-
-        // Render the featured games and the regular games
-        renderFeaturedGames(featuredGames);
-        render(allGames); // Render the full list of games below the featured ones
+        render(GAMES); // Render the sorted games
         updateCount(); // Update count for games
       })
       .catch(err => console.error('JSON load error', err));
-  }
-
-  function renderFeaturedGames(featuredGames) {
-    featuredGrid.innerHTML = '';
-    featuredGames.forEach(item => featuredGrid.appendChild(createCard(item)));
   }
 
   function createCard(item) {
