@@ -406,7 +406,7 @@ function openItem(item) {
       gameFrame.contentDocument.write(htmlContent);
       gameFrame.contentDocument.close();
       
-      // Adjust iframe to take up 100% of the modal
+      // Set iframe to fill the modal container
       gameFrame.style.display = 'block';  // Make iframe visible
       gameFrame.style.position = 'absolute';  // Set iframe to be absolute in modal
       gameFrame.style.top = '0';  // Position iframe at the top of the modal
@@ -427,6 +427,25 @@ function openItem(item) {
       `);
       gameFrame.contentDocument.close();
     });
+}
+
+// Fullscreen Button Logic
+fullscreenButton.addEventListener('click', () => {
+  if (isFullscreen) {
+    // Exit fullscreen
+    document.exitFullscreen();
+    resetIframeStyles();  // Reset iframe styles when exiting fullscreen
+  } else {
+    // Request fullscreen for modal and iframe
+    modal.requestFullscreen();
+    gameFrame.style.position = 'absolute';  // Make the iframe absolute to take full screen
+    gameFrame.style.top = 0;
+    gameFrame.style.left = 0;
+    gameFrame.style.width = '100vw';  // Set full width
+    gameFrame.style.height = '100vh';  // Set full height
+  }
+  isFullscreen = !isFullscreen;
+});
 }
   </script>
 </body>
