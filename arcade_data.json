@@ -2,12 +2,12 @@
   "games": [
     {
       "title": "Roblox",
-      "src": "https://raw.githubusercontent.com/ten8mystery/htmlgamesholder-/refs/heads/main/roblox.html",
+      "src": "https://raw.githubusercontent.com/ten8mystery/Diamond-Backend/refs/heads/main/roblox.html",
       "thumb": "https://static0.polygonimages.com/wordpress/wp-content/uploads/chorus/uploads/chorus_asset/file/22363918/roblox.jpeg"
     },
     {
       "title": "Fortnite",
-      "src": "https://raw.githubusercontent.com/ten8mystery/htmlgamesholder-/refs/heads/main/forthtml.html",
+      "src": "https://raw.githubusercontent.com/ten8mystery/Diamond-Backend/refs/heads/main/forthtml.html",
       "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6i0wwFmBp6gwwdZyqpHMzkmrKh_TFCS4_Og&s"
     },
     {
@@ -227,22 +227,22 @@
     },
    {
       "title": "2048",
-      "src": "https://raw.githubusercontent.com/ten8mystery/htmlgamesholder-/refs/heads/main/2048html.html",
+      "src": "https://raw.githubusercontent.com/ten8mystery/Diamond-Backend/refs/heads/main/2048html.html",
       "thumb": "https://www.mathsisfun.com/games/images/2048.png"
     },
    {
       "title": "OMORI",
-      "src": "https://raw.githubusercontent.com/ten8mystery/Diamond-HTML-Files/refs/heads/main/omori.html",
+      "src": "https://raw.githubusercontent.com/ten8mystery/Diamond-Backend/refs/heads/main/omori.html",
       "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrBkjYiUsnnPAj9NaaceGGqtqwHNzQMZVwxQ&s"
     },
    {
       "title": "Celeste",
-      "src": "https://raw.githubusercontent.com/ten8mystery/Diamond-HTML-Files/refs/heads/main/Celeste.html",
+      "src": "https://raw.githubusercontent.com/ten8mystery/Diamond-Backend/refs/heads/main/Celeste.html",
       "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/623.png"
     },
    {
       "title": "Friday Night Funkin'",
-      "src": "https://raw.githubusercontent.com/ten8mystery/Diamond-HTML-Files/refs/heads/main/Friday%20Night%20Funkin.html",
+      "src": "https://raw.githubusercontent.com/ten8mystery/Diamond-Backend/refs/heads/main/Friday%20Night%20Funkin.html",
       "thumb": "https://img.itch.zone/aW1hZ2UvNzkyNzc4LzQ1MjMzNTkucG5n/original/OUw2Vg.png"
     },
    {
