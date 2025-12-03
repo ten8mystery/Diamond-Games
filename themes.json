@@ -31,7 +31,7 @@
       "--accent2": "140 80% 60%",
       "--accent3": "100 80% 50%",
       "--text-color": "#e6eef8",
-      "--button-text-color": "#ffffff"
+      "--button-text-color": "#000000"
     },
     {
       "name": "Iron",
@@ -42,7 +42,7 @@
       "--accent2": "0 0% 60%",
       "--accent3": "0 0% 50%",
       "--text-color": "#e6eef8",
-      "--button-text-color": "#ffffff"
+      "--button-text-color": "#000000"
     }
   ]
 }
