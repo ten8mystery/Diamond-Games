@@ -14,10 +14,11 @@
       --accent1: 220 88% 60%; /* blue */
       --accent2: 280 88% 60%; /* purple */
       --accent3: 140 75% 50%; /* green */
+      --textColor: #e6eef8; /* Default text color */
       --bg-light: #add8e6; /* Default Light blue for background */
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background:var(--bg);color:#e6eef8;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--textColor);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
 
     /* ---------- Animated background canvas (particles) ---------- */
     canvas#particles{position:fixed;inset:0;z-index:-2;pointer-events:none;will-change:transform}
@@ -47,7 +48,7 @@
       border: none;
       border-radius: 10px;
       background: linear-gradient(145deg, var(--accent1), var(--accent2));
-      color: white;
+      color: var(--textColor);
       cursor: pointer;
       transition: transform 200ms ease, background 200ms ease, box-shadow 200ms ease;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -242,11 +243,13 @@
         document.documentElement.style.setProperty('--accent1', defaultAccent1);
         document.documentElement.style.setProperty('--accent2', defaultAccent2);
         document.documentElement.style.setProperty('--accent3', defaultAccent3);
+        document.documentElement.style.setProperty('--textColor', '#e6eef8'); // Default text color
       } else {
         // For example: adjust HSL values to keep the theme visually balanced
         document.documentElement.style.setProperty('--accent1', '210 88% 65%'); // Lighter blue
         document.documentElement.style.setProperty('--accent2', '260 88% 65%'); // Lighter purple
         document.documentElement.style.setProperty('--accent3', '150 75% 55%'); // Lighter green
+        document.documentElement.style.setProperty('--textColor', '#000000'); // Darker text color
       }
     }
 
