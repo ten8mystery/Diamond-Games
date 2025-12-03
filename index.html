@@ -156,7 +156,7 @@
     <div class="right">
       <button id="gamesTab" class="active">Games</button>
       <button id="appsTab">Apps</button>
-      <span id="gamesCount" class="pill"></span>
+      <span id="gamesCount" class="pill"></span> <!-- Added span for games count -->
     </div>
   </div>
 
@@ -170,17 +170,17 @@
     </section>
 
     <section class="grid" id="grid">
-      <!-- Regular games injected by JS -->
+      <!-- cards injected by JS -->
     </section>
   </main>
 
-  <!-- Modal -->
-  <div id="modal" style="display:none;position:fixed;inset:0;justify-content:center;align-items:center;background:rgba(2,6,23,0.8);z-index:60">
-    <div style="width:95%;max-width:1500px;height:90vh;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);box-shadow:0 30px 80px rgba(0,0,0,0.6);background:#07070b">
-      <button id="closeModal" style="position:absolute;right:20px;top:16px;z-index:70;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.06);border:none;color:#fff;cursor:pointer">Close</button>
-      <iframe id="gameFrame" style="width:100%;height:100%;border:none" sandbox="allow-scripts allow-same-origin allow-pointer-lock"></iframe>
-    </div>
+<!-- Modal -->
+<div id="modal" style="display:none;position:fixed;inset:0;justify-content:center;align-items:center;background:rgba(2,6,23,0.8);z-index:60">
+  <div style="width:95%;max-width:1500px;height:90vh;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);box-shadow:0 30px 80px rgba(0,0,0,0.6);background:#07070b">
+    <button id="closeModal" style="position:absolute;right:20px;top:16px;z-index:70;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.06);border:none;color:#fff;cursor:pointer">Close</button>
+    <iframe id="gameFrame" style="width:100%;height:100%;border:none" sandbox="allow-scripts allow-same-origin allow-pointer-lock"></iframe>
   </div>
+</div>
 
 <script>
   // ---------- Game and App lists (embeds) ----------
@@ -195,6 +195,11 @@
   const gamesTab = document.getElementById('gamesTab');
   const appsTab = document.getElementById('appsTab');
   const gamesCountElement = document.getElementById('gamesCount');
+
+  // Define a set of featured games by title (change these as needed)
+  const FEATURED_GAMES = [
+    'Roblox', 'Bad Parenting 1', 'Fortnite', 'OMORI', 'Hollow Knight'
+  ];
 
   function loadApps() {
     fetch('apps_data.json')
@@ -216,7 +221,16 @@
         // Sort games alphabetically by title
         GAMES.sort((a, b) => a.title.localeCompare(b.title));
 
-        render(GAMES); // Render the sorted games
+        // Get featured games
+        const featuredGames = GAMES.filter(game => FEATURED_GAMES.includes(game.title));
+
+        // Get remaining games
+        const remainingGames = GAMES.filter(game => !FEATURED_GAMES.includes(game.title));
+
+        // Combine featured games first, followed by the remaining games
+        const allGames = [...featuredGames, ...remainingGames];
+
+        render(allGames); // Render all games with featured first
         updateCount(); // Update count for games
       })
       .catch(err => console.error('JSON load error', err));
