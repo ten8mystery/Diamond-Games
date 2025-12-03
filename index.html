@@ -329,9 +329,7 @@ fullscreenButton.addEventListener('click', () => {
   if (isFullscreen) {
     // Exit fullscreen
     document.exitFullscreen();
-    gameFrame.style.position = '';  // Reset position style
-    gameFrame.style.width = '';  // Reset width
-    gameFrame.style.height = '';  // Reset height
+    resetIframeStyles();  // Reset iframe styles when exiting fullscreen
   } else {
     // Request fullscreen for modal and iframe
     modal.requestFullscreen();
@@ -348,6 +346,7 @@ fullscreenButton.addEventListener('click', () => {
 closeModal.addEventListener('click', () => {
   modal.style.display = 'none';
   gameFrame.src = '';  // Stop the game from running
+  resetIframeStyles();  // Reset iframe styles when modal is closed
   document.exitFullscreen();  // Exit fullscreen if open
   isFullscreen = false;
 });
@@ -356,14 +355,19 @@ closeModal.addEventListener('click', () => {
 document.addEventListener('fullscreenchange', () => {
   if (!document.fullscreenElement) {
     // If fullscreen was exited manually (keyboard or other), reset the iframe
-    gameFrame.style.position = '';  // Reset position
-    gameFrame.style.width = '';  // Reset width
-    gameFrame.style.height = '';  // Reset height
-    gameFrame.style.top = '';  // Ensure top is also reset
-    gameFrame.style.left = '';  // Ensure left is also reset
+    resetIframeStyles();  // Reset iframe styles when fullscreen is exited
     isFullscreen = false;
   }
 });
+
+// Function to reset iframe styles
+function resetIframeStyles() {
+  gameFrame.style.position = '';  // Reset position
+  gameFrame.style.top = '';  // Reset top
+  gameFrame.style.left = '';  // Reset left
+  gameFrame.style.width = '';  // Reset width
+  gameFrame.style.height = '';  // Reset height
+}
   </script>
 </body>
 </html>
