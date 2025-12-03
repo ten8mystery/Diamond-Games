@@ -1,6 +1,11 @@
 {
   "apps": [
     {
+      "title": "Music",
+      "thumb": "https://cdn.prod.website-files.com/64830736e7f43d491d70ef30/64bfca46b1569eeda774403d_64a57f4512ee9430c0ea7cf8_64a2cf43ee15ed8228d585a0_Business_Model_Examples-Spotify.webp",
+      "src": "https://raw.githubusercontent.com/ten8mystery/Diamond-Backend/refs/heads/main/music.html"
+    },
+    {
       "title": "Soundboard",
       "thumb": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStFthZsdJxRJDlcU0U_uQkp9-TE8D55yEjnw&s",
       "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/179.html"
