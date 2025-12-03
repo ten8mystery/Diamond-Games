@@ -362,7 +362,6 @@ document.addEventListener('fullscreenchange', () => {
 
 // Function to reset iframe styles and content
 function resetIframeStyles() {
-  // Reset all styles affecting the iframe position and visibility
   gameFrame.style.position = '';  // Reset position style
   gameFrame.style.top = '';  // Reset top
   gameFrame.style.left = '';  // Reset left
@@ -372,8 +371,8 @@ function resetIframeStyles() {
   gameFrame.style.padding = '';  // Reset padding
   gameFrame.style.transform = '';  // Reset any transform applied
   gameFrame.style.visibility = '';  // Ensure visibility is reset
-  gameFrame.style.opacity = '';  // Reset opacity if applied
-  gameFrame.style.display = 'none';  // Hide iframe temporarily until reset
+  gameFrame.style.opacity = '';  // Reset opacity
+  gameFrame.style.display = '';  // Ensure iframe is displayed correctly
   gameFrame.src = '';  // Stop the current game or content
   gameFrame.onload = null;  // Remove any load event listeners
 }
@@ -406,7 +405,15 @@ function openItem(item) {
       gameFrame.contentDocument.open();
       gameFrame.contentDocument.write(htmlContent);
       gameFrame.contentDocument.close();
-      gameFrame.style.display = 'block';  // Make iframe visible when content is loaded
+      
+      // Adjust iframe to take up 100% of the modal
+      gameFrame.style.display = 'block';  // Make iframe visible
+      gameFrame.style.position = 'absolute';  // Set iframe to be absolute in modal
+      gameFrame.style.top = '0';  // Position iframe at the top of the modal
+      gameFrame.style.left = '0';  // Position iframe at the left of the modal
+      gameFrame.style.width = '100%';  // Make iframe fill the modal width
+      gameFrame.style.height = '100%';  // Make iframe fill the modal height
+
       modal.style.display = 'flex';  // Show modal with the iframe
     })
     .catch(error => {
