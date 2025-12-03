@@ -186,191 +186,182 @@
 
   <!-- Modal -->
   <div id="modal" style="display:none;position:fixed;inset:0;justify-content:center;align-items:center;background:rgba(2,6,23,0.8);z-index:60">
-    <div id="modalContent" style="width:92%;max-width:1100px;height:80vh;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);box-shadow:0 30px 80px rgba(0,0,0,0.6);background:#07070b">
-      <!-- Close Button (Regular) -->
+    <div style="width:92%;max-width:1100px;height:80vh;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);box-shadow:0 30px 80px rgba(0,0,0,0.6);background:#07070b">
       <button id="closeModal" style="position:absolute;right:20px;top:16px;z-index:70;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.06);border:none;color:#fff;cursor:pointer">Close</button>
-
-      <!-- Fullscreen Button (Top Left) -->
-      <button id="fullscreenButton" style="position:absolute;left:20px;top:16px;padding:10px;background:rgba(255,255,255,0.06);border-radius:8px;border:none;color:#fff;cursor:pointer;">Fullscreen</button>
-
       <iframe id="gameFrame" style="width:100%;height:100%;border:none" sandbox="allow-scripts allow-same-origin allow-pointer-lock"></iframe>
     </div>
   </div>
 
-  <script>
-    // ---------- Game and App lists (embeds) ----------
-    let GAMES = [];
-    let APPS = [];
+<script>
+  // ---------- Game and App lists (embeds) ----------
+  let GAMES = [];
+  let APPS = [];
 
-    const grid = document.getElementById('grid');
-    const q = document.getElementById('q');
-    const modal = document.getElementById('modal');
-    const gameFrame = document.getElementById('gameFrame');
-    const closeModal = document.getElementById('closeModal');
-    const fullscreenButton = document.getElementById('fullscreenButton');
-    const gamesTab = document.getElementById('gamesTab');
-    const appsTab = document.getElementById('appsTab');
-    const gamesCountElement = document.getElementById('gamesCount');
+  const grid = document.getElementById('grid');
+  const q = document.getElementById('q');
+  const modal = document.getElementById('modal');
+  const gameFrame = document.getElementById('gameFrame');
+  const closeModal = document.getElementById('closeModal');
+  const gamesTab = document.getElementById('gamesTab');
+  const appsTab = document.getElementById('appsTab');
+  const gamesCountElement = document.getElementById('gamesCount');
 
-    // Reset iframe styles to ensure it fills the modal
-    function resetIframeStyles() {
-      gameFrame.style.position = '';  // Reset position style
-      gameFrame.style.width = '';  // Reset width
-      gameFrame.style.height = '';  // Reset height
-    }
-
-    // Load Games data
-    function loadGames() {
-      fetch('arcade_data.json')
-        .then(r => r.json())
-        .then(data => {
-          GAMES = data.games;
-          render(GAMES);
-          updateCount(); // Update count for games
-        })
-        .catch(err => console.error('JSON load error', err));
-    }
-
-    // Load Apps data
-    function loadApps() {
-      fetch('apps_data.json')
-        .then(r => r.json())
-        .then(data => {
-          APPS = data.apps;
-          render(APPS);
-          updateCount(); // Update count for apps
-        })
-        .catch(err => console.error('JSON load error', err));
-    }
-
-    function createCard(item) {
-      const el = document.createElement('article');
-      el.className = 'card';
-
-      const img = document.createElement('img');
-      img.className = 'thumb';
-      img.src = item.thumb;
-      img.alt = item.title;
-
-      const meta = document.createElement('div'); meta.className = 'meta';
-      const h3 = document.createElement('h3'); h3.textContent = item.title;
-      const btn = document.createElement('button'); btn.className = 'play'; btn.textContent = 'Play';
-
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openItem(item);
-      });
-
-      meta.appendChild(h3); meta.appendChild(btn);
-      el.appendChild(img); el.appendChild(meta);
-
-      return el;
-    }
-
-    function render(items) {
-      grid.innerHTML = '';
-      items.filter(item => item.title.toLowerCase().includes(q.value.toLowerCase())).forEach(item => grid.appendChild(createCard(item)));
-    }
-
-    function openItem(item) {
-      resetIframeStyles();  // Reset iframe styles before opening a new game
-      fetch(item.src)
-        .then(response => response.text())
-        .then(htmlContent => {
-          gameFrame.contentDocument.open();
-          gameFrame.contentDocument.write(htmlContent);
-          gameFrame.contentDocument.close();
-          modal.style.display = 'flex';
-        })
-        .catch(error => {
-          console.error('Error loading item content:', error);
-          gameFrame.contentDocument.open();
-          gameFrame.contentDocument.write(`
-            <div style="padding: 20px; color: white; background: #b91c1c; text-align: center; font-family: sans-serif; border-radius: 8px;">
-              <h2 style="margin-top: 0; color: white;">🛑 Error Loading Item 🛑</h2>
-              <p>Could not load content. This usually happens when the host server sends the wrong file type.</p>
-            </div>
-          `);
-          gameFrame.contentDocument.close();
-        });
-    }
-
-    closeModal.addEventListener('click', () => {
-      modal.style.display = 'none';
-      gameFrame.src = '';
-      document.exitFullscreen();  // Exit fullscreen if open
-      resetIframeStyles();  // Reset iframe styles when closing the modal
-    });
-
-    q.addEventListener('input', () => {
-      let filteredItems = gamesTab.classList.contains('active') ? GAMES : APPS;
-      filteredItems = filteredItems.filter(item => item.title.toLowerCase().includes(q.value.toLowerCase()));
-      render(filteredItems);
-      updateCount(); // Update count after filtering
-    });
-
-    // Tab Switch Functionality
-    gamesTab.addEventListener('click', () => {
-      gamesTab.classList.add('active');
-      appsTab.classList.remove('active');
-      loadGames();
-    });
-
-    appsTab.addEventListener('click', () => {
-      appsTab.classList.add('active');
-      gamesTab.classList.remove('active');
-      loadApps();
-    });
-
-    // Initialize with Games Tab Active
-    gamesTab.classList.add('active');
-    loadGames();
-
-    // Function to update the count based on active tab
-    function updateCount() {
-      const itemCount = gamesTab.classList.contains('active') ? GAMES.length : APPS.length;
-      gamesCountElement.textContent = `Count: ${itemCount}`;
-    }
-
-    let isFullscreen = false;
-
-    // Fullscreen Button Logic
-    fullscreenButton.addEventListener('click', () => {
-      if (isFullscreen) {
-        // Exit fullscreen
-        document.exitFullscreen();
-        resetIframeStyles();  // Reset iframe styles after exiting fullscreen
-      } else {
-        // Request fullscreen for modal and iframe
-        modal.requestFullscreen();
-        gameFrame.style.position = 'absolute';  // Make the iframe absolute to take full screen
-        gameFrame.style.top = 0;
-        gameFrame.style.left = 0;
-        gameFrame.style.width = '100vw';  // Set full width
-        gameFrame.style.height = '100vh';  // Set full height
-      }
-      isFullscreen = !isFullscreen;
-    });
-
-    // Close Button Logic (Closes the modal and exits fullscreen)
-    closeModal.addEventListener('click', () => {
-      modal.style.display = 'none';
-      gameFrame.src = '';  // Stop the game from running
-      document.exitFullscreen();  // Exit fullscreen if open
-      resetIframeStyles();  // Reset iframe styles when closing the modal
-      isFullscreen = false;
-    });
-
-    // Listen for when the user exits fullscreen using keyboard or other means
-    document.addEventListener('fullscreenchange', () => {
-      if (!document.fullscreenElement) {
-        // If fullscreen was exited manually (keyboard or other), reset the iframe
-        reset
-    document.addEventListener('fullscreenchange', () => {
-  if (!document.fullscreenElement) {
-    // If fullscreen was exited manually (ESC, keyboard, browser UI)
-    resetIframeStyles();
-    isFullscreen = false;
+  // Reset iframe styles to ensure it fills the modal
+  function resetIframeStyles() {
+    gameFrame.style.position = '';  // Reset position style
+    gameFrame.style.width = '';  // Reset width
+    gameFrame.style.height = '';  // Reset height
   }
-});
 
+  // Load Games data
+  function loadGames() {
+    fetch('arcade_data.json')
+      .then(r => r.json())
+      .then(data => {
+        GAMES = data.games;
+        render(GAMES);
+        updateCount(); // Update count for games
+      })
+      .catch(err => console.error('JSON load error', err));
+  }
+
+  // Load Apps data
+  function loadApps() {
+    fetch('apps_data.json')
+      .then(r => r.json())
+      .then(data => {
+        APPS = data.apps;
+        render(APPS);
+        updateCount(); // Update count for apps
+      })
+      .catch(err => console.error('JSON load error', err));
+  }
+
+  function createCard(item) {
+    const el = document.createElement('article');
+    el.className = 'card';
+
+    const img = document.createElement('img');
+    img.className = 'thumb';
+    img.src = item.thumb;
+    img.alt = item.title;
+
+    const meta = document.createElement('div'); meta.className = 'meta';
+    const h3 = document.createElement('h3'); h3.textContent = item.title;
+    const btn = document.createElement('button'); btn.className = 'play'; btn.textContent = 'Play';
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openItem(item);
+    });
+
+    meta.appendChild(h3); meta.appendChild(btn);
+    el.appendChild(img); el.appendChild(meta);
+
+    return el;
+  }
+
+  function render(items) {
+    grid.innerHTML = '';
+    items.filter(item => item.title.toLowerCase().includes(q.value.toLowerCase())).forEach(item => grid.appendChild(createCard(item)));
+  }
+
+  function openItem(item) {
+    fetch(item.src)
+      .then(response => response.text())
+      .then(htmlContent => {
+        gameFrame.contentDocument.open();
+        gameFrame.contentDocument.write(htmlContent);
+        gameFrame.contentDocument.close();
+        modal.style.display = 'flex';
+      })
+      .catch(error => {
+        console.error('Error loading item content:', error);
+        gameFrame.contentDocument.open();
+        gameFrame.contentDocument.write(`
+          <div style="padding: 20px; color: white; background: #b91c1c; text-align: center; font-family: sans-serif; border-radius: 8px;">
+            <h2 style="margin-top: 0; color: white;">🛑 Error Loading Item 🛑</h2>
+            <p>Could not load content. This usually happens when the host server sends the wrong file type.</p>
+          </div>
+        `);
+        gameFrame.contentDocument.close();
+      });
+  }
+
+  closeModal.addEventListener('click', () => {
+    modal.style.display = 'none';
+    gameFrame.src = '';
+    document.exitFullscreen();  // Exit fullscreen if open
+    resetIframeStyles();  // Reset iframe styles when closing the modal
+  });
+
+  q.addEventListener('input', () => {
+    let filteredItems = gamesTab.classList.contains('active') ? GAMES : APPS;
+    filteredItems = filteredItems.filter(item => item.title.toLowerCase().includes(q.value.toLowerCase()));
+    render(filteredItems);
+    updateCount(); // Update count after filtering
+  });
+
+  // Tab Switch Functionality
+  gamesTab.addEventListener('click', () => {
+    gamesTab.classList.add('active');
+    appsTab.classList.remove('active');
+    loadGames();
+  });
+
+  appsTab.addEventListener('click', () => {
+    appsTab.classList.add('active');
+    gamesTab.classList.remove('active');
+    loadApps();
+  });
+
+  // Initialize with Games Tab Active
+  gamesTab.classList.add('active');
+  loadGames();
+
+  // Function to update the count based on active tab
+  function updateCount() {
+    const itemCount = gamesTab.classList.contains('active') ? GAMES.length : APPS.length;
+    gamesCountElement.textContent = `Count: ${itemCount}`;
+  }
+
+  let isFullscreen = false;
+
+  // Fullscreen Button Logic
+  fullscreenButton.addEventListener('click', () => {
+    if (isFullscreen) {
+      // Exit fullscreen
+      document.exitFullscreen();
+      resetIframeStyles();  // Reset iframe styles after exiting fullscreen
+    } else {
+      // Request fullscreen for modal and iframe
+      modal.requestFullscreen();
+      gameFrame.style.position = 'absolute';  // Make the iframe absolute to take full screen
+      gameFrame.style.top = 0;
+      gameFrame.style.left = 0;
+      gameFrame.style.width = '100vw';  // Set full width
+      gameFrame.style.height = '100vh';  // Set full height
+    }
+    isFullscreen = !isFullscreen;
+  });
+
+  // Close Button Logic (Closes the modal and exits fullscreen)
+  closeModal.addEventListener('click', () => {
+    modal.style.display = 'none';
+    gameFrame.src = '';  // Stop the game from running
+    document.exitFullscreen();  // Exit fullscreen if open
+    resetIframeStyles();  // Reset iframe styles when closing the modal
+    isFullscreen = false;
+  });
+
+  // Listen for when the user exits fullscreen using keyboard or other means
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) {
+      // If fullscreen was exited manually (keyboard or other), reset the iframe
+      resetIframeStyles();
+      isFullscreen = false;
+    }
+  });
+</script>
+</body>
+</html>
