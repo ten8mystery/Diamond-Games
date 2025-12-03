@@ -82,6 +82,9 @@
     /* ---------- Grid ---------- */
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;max-width:1200px;margin:36px auto;padding:0 18px;z-index:5}
 
+    /* Featured Games Grid */
+    .grid-featured{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;max-width:1200px;margin:36px auto;padding:0 18px;}
+
     /* ---------- Card ---------- */
     .card {
       position: relative;
@@ -137,16 +140,6 @@
       transition: transform 160ms;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Change auto-fit to auto-fill */
-      gap: 22px;
-      max-width: 1200px;
-      margin: 36px auto;
-      padding: 0 18px;
-      z-index: 5;
-    }
-
     /* small screens */
     @media (max-width:640px){.hero h2{font-size:26px}.search{width:92%}}
   </style>
@@ -166,7 +159,7 @@
     <div class="right">
       <button id="gamesTab" class="active">Games</button>
       <button id="appsTab">Apps</button>
-      <span id="gamesCount" class="pill"></span> <!-- Added span for games count -->
+      <span id="gamesCount" class="pill"></span>
     </div>
   </div>
 
@@ -179,19 +172,26 @@
       </div>
     </section>
 
+    <!-- Featured Games Section -->
+    <section class="featured-section">
+      <h2>Featured Games</h2>
+      <div class="grid-featured" id="featured-grid">
+        <!-- Featured games will be injected here -->
+      </div>
+    </section>
+
     <section class="grid" id="grid">
-      <!-- cards injected by JS -->
+      <!-- Regular games injected by JS -->
     </section>
   </main>
 
-<!-- Modal -->
-<div id="modal" style="display:none;position:fixed;inset:0;justify-content:center;align-items:center;background:rgba(2,6,23,0.8);z-index:60">
-  <div style="width:95%;max-width:1500px;height:90vh;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);box-shadow:0 30px 80px rgba(0,0,0,0.6);background:#07070b">
-    <button id="closeModal" style="position:absolute;right:20px;top:16px;z-index:70;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.06);border:none;color:#fff;cursor:pointer">Close</button>
-    <iframe id="gameFrame" style="width:100%;height:100%;border:none" sandbox="allow-scripts allow-same-origin allow-pointer-lock"></iframe>
+  <!-- Modal -->
+  <div id="modal" style="display:none;position:fixed;inset:0;justify-content:center;align-items:center;background:rgba(2,6,23,0.8);z-index:60">
+    <div style="width:95%;max-width:1500px;height:90vh;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);box-shadow:0 30px 80px rgba(0,0,0,0.6);background:#07070b">
+      <button id="closeModal" style="position:absolute;right:20px;top:16px;z-index:70;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.06);border:none;color:#fff;cursor:pointer">Close</button>
+      <iframe id="gameFrame" style="width:100%;height:100%;border:none" sandbox="allow-scripts allow-same-origin allow-pointer-lock"></iframe>
+    </div>
   </div>
-</div>
-
 
 <script>
   // ---------- Game and App lists (embeds) ----------
@@ -199,6 +199,7 @@
   let APPS = [];
 
   const grid = document.getElementById('grid');
+  const featuredGrid = document.getElementById('featured-grid');
   const q = document.getElementById('q');
   const modal = document.getElementById('modal');
   const gameFrame = document.getElementById('gameFrame');
@@ -207,32 +208,53 @@
   const appsTab = document.getElementById('appsTab');
   const gamesCountElement = document.getElementById('gamesCount');
 
-function loadApps() {
-  fetch('apps_data.json')
-    .then(r => r.json())
-    .then(data => {
-      APPS = data.apps;
-      render(APPS); // Render the apps
-      updateCount(); // Update count for apps
-    })
-    .catch(err => console.error('JSON load error', err));
-}
+  // Define your featured games by title (this is just an example)
+  const FEATURED_GAMES = [
+    'Game 1', 'Game 2', 'Game 3', 'Game 4', 'Game 5',
+    'Game 6', 'Game 7', 'Game 8', 'Game 9', 'Game 10'
+  ];
 
+  function loadApps() {
+    fetch('apps_data.json')
+      .then(r => r.json())
+      .then(data => {
+        APPS = data.apps;
+        render(APPS); // Render the apps
+        updateCount(); // Update count for apps
+      })
+      .catch(err => console.error('JSON load error', err));
+  }
 
-function loadGames() {
-  fetch('arcade_data.json')
-    .then(r => r.json())
-    .then(data => {
-      GAMES = data.games;
-      // Sort games alphabetically by title
-      GAMES.sort((a, b) => a.title.localeCompare(b.title));
-      render(GAMES); // Render the sorted games
-      updateCount(); // Update count for games
-    })
-    .catch(err => console.error('JSON load error', err));
-}
+  function loadGames() {
+    fetch('arcade_data.json')
+      .then(r => r.json())
+      .then(data => {
+        GAMES = data.games;
 
+        // Sort games alphabetically by title
+        GAMES.sort((a, b) => a.title.localeCompare(b.title));
 
+        // Get featured games based on the titles
+        const featuredGames = GAMES.filter(game => FEATURED_GAMES.includes(game.title));
+
+        // Get remaining games (non-featured)
+        const remainingGames = GAMES.filter(game => !FEATURED_GAMES.includes(game.title));
+
+        // Combine featured games and remaining games
+        const allGames = [...featuredGames, ...remainingGames];
+
+        // Render the featured games and the regular games
+        renderFeaturedGames(featuredGames);
+        render(allGames); // Render the full list of games below the featured ones
+        updateCount(); // Update count for games
+      })
+      .catch(err => console.error('JSON load error', err));
+  }
+
+  function renderFeaturedGames(featuredGames) {
+    featuredGrid.innerHTML = '';
+    featuredGames.forEach(item => featuredGrid.appendChild(createCard(item)));
+  }
 
   function createCard(item) {
     const el = document.createElement('article');
@@ -243,17 +265,23 @@ function loadGames() {
     img.src = item.thumb;
     img.alt = item.title;
 
-    const meta = document.createElement('div'); meta.className = 'meta';
-    const h3 = document.createElement('h3'); h3.textContent = item.title;
-    const btn = document.createElement('button'); btn.className = 'play'; btn.textContent = 'Play';
+    const meta = document.createElement('div'); 
+    meta.className = 'meta';
+    const h3 = document.createElement('h3'); 
+    h3.textContent = item.title;
+    const btn = document.createElement('button'); 
+    btn.className = 'play'; 
+    btn.textContent = 'Play';
 
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       openItem(item);
     });
 
-    meta.appendChild(h3); meta.appendChild(btn);
-    el.appendChild(img); el.appendChild(meta);
+    meta.appendChild(h3); 
+    meta.appendChild(btn);
+    el.appendChild(img); 
+    el.appendChild(meta);
 
     return el;
   }
@@ -297,23 +325,16 @@ function loadGames() {
     updateCount(); // Update count after filtering
   });
 
-gamesTab.addEventListener('click', () => {
-  gamesTab.classList.add('active');
-  appsTab.classList.remove('active');
-  loadGames(); // Ensure games load when the tab is clicked
-});
-
-appsTab.addEventListener('click', () => {
-  appsTab.classList.add('active');
-  gamesTab.classList.remove('active');
-  loadApps(); // Ensure apps load when the tab is clicked
-});
-
+  gamesTab.addEventListener('click', () => {
+    gamesTab.classList.add('active');
+    appsTab.classList.remove('active');
+    loadGames(); // Ensure games load when the tab is clicked
+  });
 
   appsTab.addEventListener('click', () => {
     appsTab.classList.add('active');
     gamesTab.classList.remove('active');
-    loadApps();
+    loadApps(); // Ensure apps load when the tab is clicked
   });
 
   // Initialize with Games Tab Active
