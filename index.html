@@ -526,19 +526,21 @@ unlockerTab.addEventListener('click', () => {
   // Load Unlocker iframe
   gameFrame.src = '/pages/unlocker/index.html'; // Set iframe source
   modal.style.display = 'flex'; // Open modal with iframe content
+});
 
-  // Switch back to last active tab after Unlocker iframe is closed
-  closeModal.addEventListener('click', () => {
-    modal.style.display = 'none';
-    gameFrame.src = ''; // Clear iframe content
-    if (lastActiveTab === 'games') {
-      gamesTab.classList.add('active');
-      loadGames();
-    } else if (lastActiveTab === 'apps') {
-      appsTab.classList.add('active');
-      loadApps();
-    }
-  });
+// Close Modal
+closeModal.addEventListener('click', () => {
+  modal.style.display = 'none';
+  gameFrame.src = ''; // Clear iframe content
+
+  // Ensure only the correct tab is active when closing the modal
+  if (lastActiveTab === 'games') {
+    gamesTab.classList.add('active');
+    loadGames();
+  } else if (lastActiveTab === 'apps') {
+    appsTab.classList.add('active');
+    loadApps();
+  }
 });
 
 // Initialize with Games Tab Active
