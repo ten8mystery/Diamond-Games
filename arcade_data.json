@@ -47,7 +47,7 @@
     },
     {
       "title": "Baldi's Basic Plus",
-      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/467.html",
+      "src": "https://raw.githubusercontent.com/ten8mystery/Diamond-Backend/refs/heads/main/Baldi's%20Basics%20Plus%20(1).html",
       "thumb": "https://img.itch.zone/aW1hZ2UvNTk4NzcyLzIxODU0NjA5LnBuZw==/original/HzlJH7.png"
     },
     {
@@ -586,8 +586,8 @@
       "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/370.png"
     },
    {
-      "title": "Doom",
-      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/203.html",
+      "title": "DOOM Classic",
+      "src": "https://raw.githubusercontent.com/ten8mystery/Diamond-Backend/refs/heads/main/DOOM.html",
       "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/203.png"
     }
   ]
