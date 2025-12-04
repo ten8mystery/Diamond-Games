@@ -384,6 +384,9 @@ const unlockerTab = document.getElementById('unlockerTab');
 const gameFrame = document.getElementById('gameFrame');
 const modal = document.getElementById('modal');
 const closeModal = document.getElementById('closeModal');
+const settingsButton = document.getElementById('settingsButton');
+const settingsModal = document.getElementById('settingsModal');
+const closeSettings = document.getElementById('closeSettings');
 const gamesCountElement = document.getElementById('gamesCount');
 
 // Track the last active tab
@@ -542,6 +545,52 @@ closeModal.addEventListener('click', () => {
     loadApps();
   }
 });
+
+// Settings Modal Logic
+
+// Open the settings modal
+settingsButton.addEventListener('click', () => {
+  settingsModal.style.display = 'flex';
+  setTimeout(() => settingsModal.classList.add('show'), 10); // Smooth opening
+});
+
+// Close the settings modal
+closeSettings.addEventListener('click', () => {
+  settingsModal.classList.remove('show');
+  setTimeout(() => settingsModal.style.display = 'none', 300); // Smooth closing
+});
+
+// Fetch themes from themes.json
+fetch('themes.json')
+  .then(response => response.json())
+  .then(data => {
+    if (data && data.themes) {
+      data.themes.forEach(theme => {
+        const themeOption = document.createElement('div');
+        themeOption.className = 'theme-option';
+        themeOption.textContent = theme.name;
+        themeOption.addEventListener('click', () => changeTheme(theme, themeOption));
+        themeOptions.appendChild(themeOption);
+      });
+    }
+  })
+  .catch(error => {
+    console.error('Error loading themes:', error);
+  });
+
+// Function to change the theme
+function changeTheme(theme, selectedOption) {
+  // Change CSS variables based on the selected theme
+  Object.keys(theme).forEach(varName => {
+    document.documentElement.style.setProperty(varName, theme[varName]);
+  });
+
+  // Update active state for theme options
+  document.querySelectorAll('.theme-option').forEach(option => {
+    option.classList.remove('active');
+  });
+  selectedOption.classList.add('active');
+}
 
 // Initialize with Games Tab Active
 gamesTab.classList.add('active');
