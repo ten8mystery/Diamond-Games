@@ -255,7 +255,7 @@ h4 {
 /* ---------- Grid Layout ---------- */
 .grid {
   display: grid;
-  grid-template-columns: repeat(240px, 240px);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 22px;
   max-width: 1200px;
   margin: 36px auto;
@@ -278,7 +278,9 @@ h4 {
   backface-visibility: hidden;
   height: 300px; /* Fixed height to prevent stretching */
   display: block !important; /* Force block display */
-  width: 100%;
+  flex-direction: column;  /* This might be irrelevant since we are using grid */
+  justify-content: space-between;
+  width: 100%; /* Ensure it takes full width of its container */
 }
 
     /* Add hover effect to cards */
@@ -599,14 +601,6 @@ loadGames();
       const itemCount = gamesTab.classList.contains('active') ? GAMES.length : APPS.length;
       gamesCountElement.textContent = `Count: ${itemCount}`;
     }
-  // Live search
-document.getElementById("q").addEventListener("input", () => {
-  if (gamesTab.classList.contains("active")) {
-    render(GAMES);
-  } else if (appsTab.classList.contains("active")) {
-    render(APPS);
-  }
-});
   </script>
 </body>
 </html>
