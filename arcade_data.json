@@ -131,6 +131,11 @@
       "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/283.png"
     },
    {
+      "title": "Getaway Shootout",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/338.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/338.png"
+    },
+   {
       "title": "Bloxorz",
       "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/169.html",
       "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/169.png"
@@ -374,6 +379,16 @@
       "title": "Flappy Dunk",
       "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/153.html",
       "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/153.png"
+    },
+     {
+      "title": "Happy Wheels",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/624.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/624.png"
+    },
+     {
+      "title": "Highway Racer",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/567.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/567.png"
     },
    {
       "title": "Doom",
