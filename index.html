@@ -454,123 +454,157 @@ function changeTheme(theme, selectedOption) {
   </script>
 
   <script>
-    // ---------- Game and App lists (embeds) ----------
-    let GAMES = [];
-    let APPS = [];
+const gamesTab = document.getElementById('gamesTab');
+const appsTab = document.getElementById('appsTab');
+const unlockerTab = document.getElementById('unlockerTab');
+const gameFrame = document.getElementById('gameFrame');
+const modal = document.getElementById('modal');
+const closeModal = document.getElementById('closeModal');
+const gamesCountElement = document.getElementById('gamesCount');
 
-    const grid = document.getElementById('grid');
-    const q = document.getElementById('q');
-    const modal = document.getElementById('modal');
-    const gameFrame = document.getElementById('gameFrame');
-    const closeModal = document.getElementById('closeModal');
-    const gamesTab = document.getElementById('gamesTab');
-    const appsTab = document.getElementById('appsTab');
-    const gamesCountElement = document.getElementById('gamesCount');
+// Load Games and Apps Data
+let GAMES = [];
+let APPS = [];
 
-    // Load Games data
-    function loadGames() {
-      fetch('arcade_data.json')
-        .then(r => r.json())
-        .then(data => {
-          GAMES = data.games;
-          render(GAMES);
-          updateCount(); // Update count for games
-        })
-        .catch(err => console.error('JSON load error', err));
-    }
+function loadGames() {
+  fetch('arcade_data.json')
+    .then(r => r.json())
+    .then(data => {
+      GAMES = data.games;
+      render(GAMES);
+      updateCount();
+    })
+    .catch(err => console.error('JSON load error', err));
+}
 
-    // Load Apps data
-    function loadApps() {
-      fetch('apps_data.json')
-        .then(r => r.json())
-        .then(data => {
-          APPS = data.apps;
-          render(APPS);
-          updateCount(); // Update count for apps
-        })
-        .catch(err => console.error('JSON load error', err));
-    }
+function loadApps() {
+  fetch('apps_data.json')
+    .then(r => r.json())
+    .then(data => {
+      APPS = data.apps;
+      render(APPS);
+      updateCount();
+    })
+    .catch(err => console.error('JSON load error', err));
+}
 
-    function createCard(item) {
-      const el = document.createElement('article');
-      el.className = 'card';
+// Render function to display filtered games/apps
+function render(items) {
+  const q = document.getElementById('q');
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  items
+    .filter(item => item.title.toLowerCase().includes(q.value.toLowerCase()))
+    .forEach(item => grid.appendChild(createCard(item)));
+}
 
-      const img = document.createElement('img');
-      img.className = 'thumb';
-      img.src = item.thumb;
-      img.alt = item.title;
+// Function to create a card
+function createCard(item) {
+  const el = document.createElement('article');
+  el.className = 'card';
 
-      const meta = document.createElement('div'); meta.className = 'meta';
-      const h3 = document.createElement('h3'); h3.textContent = item.title;
-      const btn = document.createElement('button'); btn.className = 'play'; btn.textContent = 'Play';
+  const img = document.createElement('img');
+  img.className = 'thumb';
+  img.src = item.thumb;
+  img.alt = item.title;
 
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openItem(item);
-      });
+  const meta = document.createElement('div');
+  meta.className = 'meta';
+  const h3 = document.createElement('h3');
+  h3.textContent = item.title;
+  const btn = document.createElement('button');
+  btn.className = 'play';
+  btn.textContent = 'Play';
+  
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openItem(item);
+  });
 
-      meta.appendChild(h3); meta.appendChild(btn);
-      el.appendChild(img); el.appendChild(meta);
+  meta.appendChild(h3);
+  meta.appendChild(btn);
+  el.appendChild(img);
+  el.appendChild(meta);
 
-      return el;
-    }
+  return el;
+}
 
-    function render(items) {
-      grid.innerHTML = '';
-      items.filter(item => item.title.toLowerCase().includes(q.value.toLowerCase())).forEach(item => grid.appendChild(createCard(item)));
-    }
-
-    function openItem(item) {
-      fetch(item.src)
-        .then(response => response.text())
-        .then(htmlContent => {
-          gameFrame.contentDocument.open();
-          gameFrame.contentDocument.write(htmlContent);
-          gameFrame.contentDocument.close();
-          modal.style.display = 'flex';
-        })
-        .catch(error => {
-          console.error('Error loading item content:', error);
-          gameFrame.contentDocument.open();
-          gameFrame.contentDocument.write(`
-            <div style="padding: 20px; color: white; background: #b91c1c; text-align: center; font-family: sans-serif; border-radius: 8px;">
-              <h2 style="margin-top: 0; color: white;">🛑 Error Loading Item 🛑</h2>
-              <p>Could not load content. This usually happens when the host server sends the wrong file type.</p>
-            </div>
-          `);
-          gameFrame.contentDocument.close();
-        });
-    }
-
-    closeModal.addEventListener('click', () => {
-      modal.style.display = 'none';
-      gameFrame.src = '';
+// Function to open the selected item in the iframe
+function openItem(item) {
+  fetch(item.src)
+    .then(response => response.text())
+    .then(htmlContent => {
+      gameFrame.contentDocument.open();
+      gameFrame.contentDocument.write(htmlContent);
+      gameFrame.contentDocument.close();
+      modal.style.display = 'flex';
+    })
+    .catch(error => {
+      console.error('Error loading item content:', error);
+      gameFrame.contentDocument.open();
+      gameFrame.contentDocument.write(`
+        <div style="padding: 20px; color: white; background: #b91c1c; text-align: center; font-family: sans-serif; border-radius: 8px;">
+          <h2 style="margin-top: 0; color: white;">🛑 Error Loading Item 🛑</h2>
+          <p>Could not load content. This usually happens when the host server sends the wrong file type.</p>
+        </div>
+      `);
+      gameFrame.contentDocument.close();
     });
+}
 
-    q.addEventListener('input', () => {
-      let filteredItems = gamesTab.classList.contains('active') ? GAMES : APPS;
-      filteredItems = filteredItems.filter(item => item.title.toLowerCase().includes(q.value.toLowerCase()));
-      render(filteredItems);
-      updateCount(); // Update count after filtering
-    });
+// Function to update the count based on the active tab
+function updateCount() {
+  const itemCount = gamesTab.classList.contains('active') ? GAMES.length : APPS.length;
+  gamesCountElement.textContent = `Count: ${itemCount}`;
+}
 
-    // Tab Switch Functionality
-    gamesTab.addEventListener('click', () => {
-      gamesTab.classList.add('active');
-      appsTab.classList.remove('active');
-      loadGames();
-    });
+// Tab Switch Event Listeners
 
-    appsTab.addEventListener('click', () => {
-      appsTab.classList.add('active');
-      gamesTab.classList.remove('active');
-      loadApps();
-    });
+// Games Tab
+gamesTab.addEventListener('click', () => {
+  gamesTab.classList.add('active');
+  appsTab.classList.remove('active');
+  unlockerTab.classList.remove('active');
+  
+  // Load Games and Render them
+  loadGames();
+  gameFrame.src = ''; // Clear iframe for games
+  modal.style.display = 'none'; // Close modal
+});
 
-    // Initialize with Games Tab Active
-    gamesTab.classList.add('active');
-    loadGames();
+// Apps Tab
+appsTab.addEventListener('click', () => {
+  appsTab.classList.add('active');
+  gamesTab.classList.remove('active');
+  unlockerTab.classList.remove('active');
+  
+  // Load Apps and Render them
+  loadApps();
+  gameFrame.src = ''; // Clear iframe for apps
+  modal.style.display = 'none'; // Close modal
+});
 
+// Unlocker Tab
+unlockerTab.addEventListener('click', () => {
+  unlockerTab.classList.add('active');
+  gamesTab.classList.remove('active');
+  appsTab.classList.remove('active');
+  
+  // Load Unlocker iframe
+  gameFrame.src = '/pages/unlocker/index.html'; // Set iframe source
+  modal.style.display = 'flex'; // Open modal with iframe content
+});
+
+// Close Modal
+closeModal.addEventListener('click', () => {
+  modal.style.display = 'none';
+  gameFrame.src = ''; // Clear iframe content
+});
+
+// Initialize with Games Tab Active
+gamesTab.classList.add('active');
+loadGames();
+  
     // Function to update the count based on active tab
     function updateCount() {
       const itemCount = gamesTab.classList.contains('active') ? GAMES.length : APPS.length;
