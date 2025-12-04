@@ -333,12 +333,13 @@ h4 {
       </div>
     </div>
 
-    <div class="right">
-      <button id="gamesTab" class="active">Games</button>
-      <button id="appsTab">Apps</button>
-      <span id="gamesCount" class="pill"></span>
-      <button id="settingsButton">Settings</button>
-    </div>
+<div class="right">
+  <button id="gamesTab" class="active">Games</button>
+  <button id="appsTab">Apps</button>
+  <button id="unlockerTab">Unlocker</button> <!-- New Tab -->
+  <span id="gamesCount" class="pill"></span>
+  <button id="settingsButton">Settings</button>
+</div>
   </div>
 
   <main>
@@ -376,10 +377,36 @@ h4 {
 </div>
 
   <script>
-const settingsButton = document.getElementById('settingsButton');
-const settingsModal = document.getElementById('settingsModal');
-const closeSettings = document.getElementById('closeSettings');
-const themeOptions = document.getElementById('themeOptions');
+// Fetch the new tab and iframe elements
+const unlockerTab = document.getElementById('unlockerTab');
+const gameFrame = document.getElementById('gameFrame');
+const modal = document.getElementById('modal');
+
+// Add event listener for the new Unlocker tab
+unlockerTab.addEventListener('click', () => {
+  // Switch to Unlocker tab
+  unlockerTab.classList.add('active');
+  gamesTab.classList.remove('active');
+  appsTab.classList.remove('active');
+
+  // Load the Unlocker iframe content
+  loadUnlockerContent();
+});
+
+// Function to load Unlocker content in the iframe
+function loadUnlockerContent() {
+  // Set the iframe source to the Unlocker page
+  gameFrame.src = "/pages/unlocker/index.html";
+
+  // Show the modal with the iframe content
+  modal.style.display = 'flex';
+}
+
+// Add event listener to close the modal
+closeModal.addEventListener('click', () => {
+  modal.style.display = 'none';
+  gameFrame.src = ''; // Clear the iframe content when closing
+});
 
 // Open the settings modal
 settingsButton.addEventListener('click', () => {
