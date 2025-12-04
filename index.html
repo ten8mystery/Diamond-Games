@@ -601,6 +601,13 @@ loadGames();
       const itemCount = gamesTab.classList.contains('active') ? GAMES.length : APPS.length;
       gamesCountElement.textContent = `Count: ${itemCount}`;
     }
+  document.getElementById("q").addEventListener("input", () => {
+  if (gamesTab.classList.contains("active")) {
+    render(GAMES);
+  } else {
+    render(APPS);
+  }
+});
   </script>
 </body>
 </html>
