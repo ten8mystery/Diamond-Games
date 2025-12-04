@@ -436,11 +436,6 @@
       "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/95.png"
     },
      {
-      "title": "Moto X3M",
-      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/96.html",
-      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/96.png"
-    },
-     {
       "title": "Moto X3M 2",
       "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/97.html",
       "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/97.png"
@@ -459,6 +454,76 @@
       "title": "0v0 2",
       "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/2.html",
       "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/2.png"
+    },
+     {
+      "title": "Papa's Bakeria",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/218.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/218.png"
+    },
+     {
+      "title": "Papa's Bugeria",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/219.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/219.png"
+    },
+     {
+      "title": "Papa's Cheeseria",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/220.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/220.png"
+    },
+     {
+      "title": "Papa's Cupcakeria",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/221.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/221.png"
+    },
+     {
+      "title": "Papa's Donuteria",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/222.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/222.png"
+    },
+     {
+      "title": "Papa's Freezeria",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/223.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/223.png"
+    },
+     {
+      "title": "Papa's Hot Doggeria",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/224.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/224.png"
+    },
+     {
+      "title": "Papa's Pancakeria",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/225.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/225.png"
+    },
+     {
+      "title": "Papa's Pasteria",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/226.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/226.png"
+    },
+     {
+      "title": "Papa's Pizzeria",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/227.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/227.png"
+    },
+     {
+      "title": "Papa's Scooperia",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/228.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/228.png"
+    },
+     {
+      "title": "Papa's Sushiria",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/229.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/229.png"
+    },
+     {
+      "title": "Papa's Taco Mia",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/230.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/230.png"
+    },
+     {
+      "title": "Papa's Wingeria",
+      "src": "https://cdn.jsdelivr.net/gh/gn-math/html@main/231.html",
+      "thumb": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/231.png"
     },
    {
       "title": "Doom",
