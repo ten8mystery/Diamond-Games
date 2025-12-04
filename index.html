@@ -377,7 +377,7 @@ h4 {
 </div>
 
   <script>
-// Fetch the new tab and iframe elements
+// Fetch the tab and iframe elements
 const gamesTab = document.getElementById('gamesTab');
 const appsTab = document.getElementById('appsTab');
 const unlockerTab = document.getElementById('unlockerTab');
@@ -385,6 +385,9 @@ const gameFrame = document.getElementById('gameFrame');
 const modal = document.getElementById('modal');
 const closeModal = document.getElementById('closeModal');
 const gamesCountElement = document.getElementById('gamesCount');
+
+// Track the last active tab
+let lastActiveTab = 'games'; // default is 'games'
 
 // Load Games and Apps Data
 let GAMES = [];
@@ -494,6 +497,9 @@ gamesTab.addEventListener('click', () => {
   loadGames();
   gameFrame.src = ''; // Clear iframe for games
   modal.style.display = 'none'; // Close modal
+
+  // Set last active tab to 'games'
+  lastActiveTab = 'games';
 });
 
 // Apps Tab
@@ -506,6 +512,9 @@ appsTab.addEventListener('click', () => {
   loadApps();
   gameFrame.src = ''; // Clear iframe for apps
   modal.style.display = 'none'; // Close modal
+
+  // Set last active tab to 'apps'
+  lastActiveTab = 'apps';
 });
 
 // Unlocker Tab
@@ -517,12 +526,19 @@ unlockerTab.addEventListener('click', () => {
   // Load Unlocker iframe
   gameFrame.src = '/pages/unlocker/index.html'; // Set iframe source
   modal.style.display = 'flex'; // Open modal with iframe content
-});
 
-// Close Modal
-closeModal.addEventListener('click', () => {
-  modal.style.display = 'none';
-  gameFrame.src = ''; // Clear iframe content
+  // Switch back to last active tab after Unlocker iframe is closed
+  closeModal.addEventListener('click', () => {
+    modal.style.display = 'none';
+    gameFrame.src = ''; // Clear iframe content
+    if (lastActiveTab === 'games') {
+      gamesTab.classList.add('active');
+      loadGames();
+    } else if (lastActiveTab === 'apps') {
+      appsTab.classList.add('active');
+      loadApps();
+    }
+  });
 });
 
 // Initialize with Games Tab Active
