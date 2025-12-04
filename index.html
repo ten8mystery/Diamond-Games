@@ -155,13 +155,14 @@ html, body {
       </div>
     </div>
 
-    <div class="right">
-      <button id="gamesTab" class="active">Games</button>
-      <button id="appsTab">Apps</button>
-      <span id="gamesCount" class="pill"></span>
-      <button id="settingsButton">Settings</button>
-    </div>
-  </div>
+<div class="right">
+  <button id="gamesTab" class="active">Games</button>
+  <button id="appsTab">Apps</button>
+  <button id="unlockerTab">Unlocker</button> <!-- New Unlocker Tab -->
+  <span id="gamesCount" class="pill"></span>
+  <button id="settingsButton">Settings</button>
+</div>
+
 
   <main>
     <section class="hero">
@@ -315,6 +316,21 @@ function updateCount() {
 
 settingsButton.addEventListener('click', () => settingsModal.style.display = 'flex');
 closeSettings.addEventListener('click', () => settingsModal.style.display = 'none');
+
+  const unlockerTab = document.getElementById('unlockerTab');
+const iframeContainer = document.createElement('div');  // Create a container for the iframe
+
+// Add the iframe container to the main content
+main.appendChild(iframeContainer);
+
+// Switch to the Unlocker Tab
+unlockerTab.addEventListener('click', () => {
+  unlockerTab.classList.add('active');
+  gamesTab.classList.remove('active');
+  appsTab.classList.remove('active');
+  iframeContainer.innerHTML = '<iframe src="/pages/unlocker/index.html" style="width:100%; height:100vh; border:none;"></iframe>';
+});
+
   </script>
 </body>
 </html>
