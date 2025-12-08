@@ -11,115 +11,62 @@
       --bg: #030308;
       --panel: rgba(255,255,255,0.03);
       --glass: rgba(255,255,255,0.04);
-      --accent1: 220 88% 60%; /* Blue */
-      --accent2: 280 88% 60%; /* Purple */
-      --accent3: 140 75% 50%; /* Green */
-      --text-color: #e6eef8; /* Default Text Color */
-      --button-text-color: #ffffff; /* Default Button Text Color */
+      --accent1: 220 88% 60%;
+      --accent2: 280 88% 60%;
+      --accent3: 140 75% 50%;
+      --text-color: #e6eef8;
+      --button-text-color: #ffffff;
     }
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       height: 100%;
       background: var(--bg);
       color: var(--text-color);
-      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial;
+      font-family: 'Inter', system-ui, sans-serif;
     }
 
-/* ---------- Settings Modal Styles ---------- */
-#settingsModal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  justify-content: center;
-  align-items: center;
-  background: rgba(2, 6, 23, 0.8);
-  z-index: 60;
-  transition: opacity 0.3s ease;
-}
+    /* ---------- Settings Modal Styles ---------- */
+    #settingsModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      justify-content: center;
+      align-items: center;
+      background: rgba(2, 6, 23, 0.8);
+      z-index: 60;
+      transition: opacity 0.3s ease;
+    }
+    #settingsModal > div {
+      width: 100%;
+      max-width: 400px;
+      padding: 30px;
+      border-radius: 12px;
+      background: #111;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+      text-align: center;
+      transition: transform 0.3s ease;
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    #settingsModal.show > div {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-#settingsModal > div {
-  width: 100%;
-  max-width: 400px;
-  padding: 30px;
-  border-radius: 12px;
-  background: #111;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-  text-align: center;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  opacity: 0;
-  transform: translateY(-30px);
-}
+    button#closeSettings {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border:none;
+      border-radius:50%;
+      font-size:18px;
+      cursor:pointer;
+    }
 
-#settingsModal.show > div {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-button#closeSettings {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  font-size: 18px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-button#closeSettings:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-h3 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #fff;
-}
-
-h4 {
-  font-size: 18px;
-  color: #ccc;
-  margin-bottom: 15px;
-}
-
-#themeOptions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.theme-option {
-  padding: 12px;
-  background: var(--panel);
-  border-radius: 10px;
-  cursor: pointer;
-  color: var(--text-color);
-  font-size: 18px;
-  transition: background 200ms ease, transform 200ms ease;
-}
-
-.theme-option:hover {
-  background: var(--accent1);
-  transform: scale(1.05);
-}
-
-.theme-option.active {
-  background: var(--accent2);
-  transform: scale(1.05);
-}
-
-.theme-option:active {
-  transform: scale(1.02);
-}
-
-    /* ---------- Navbar (HUD) ---------- */
+    /* ---------- Navbar ---------- */
     .hud {
       position: fixed;
       top: 18px;
@@ -139,224 +86,169 @@ h4 {
       backdrop-filter: blur(8px);
     }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .logo { display:flex; align-items:center; gap:12px; }
+
+    .logo .mark img {
+      width:40px;
+      height:40px;
+      border-radius:9px;
     }
 
-    .logo .mark {
-      width: 40px;
-      height: 40px;
-      border-radius: 9px;
-      box-shadow: 0 8px 30px rgba(145,90,255,0.18);
-    }
+    .right { margin-left:auto; display:flex; gap:10px; }
 
-    .logo h1 {
-      font-size: 18px;
-    }
-
-    .right {
-      margin-left: auto;
-      display: flex;
-      gap: 10px;
-    }
-
-    .pill {
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: var(--panel);
-      border: 1px solid rgba(255,255,255,0.03);
-      font-size: 13px;
-      display: inline-flex;
-      align-items: center;
-    }
-
-    /* ---------- Button Styles ---------- */
     .hud .right button {
       padding: 12px 24px;
       font-size: 16px;
       font-weight: 600;
-      border: none;
       border-radius: 10px;
+      border:none;
       background: linear-gradient(145deg, var(--accent1), var(--accent2));
       color: var(--button-text-color);
-      cursor: pointer;
-      transition: transform 200ms ease, background 200ms ease, box-shadow 200ms ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      cursor:pointer;
+      transition:0.2s;
     }
-
-    .hud .right button:hover {
-      transform: translateY(-2px);
-      background: linear-gradient(145deg, var(--accent2), var(--accent1));
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
-    }
-
-    .hud .right button:active {
-      transform: translateY(1px);
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Active Tab Button Styles */
     .hud .right button.active {
       background: linear-gradient(145deg, hsl(var(--accent2)), hsl(var(--accent1)));
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
     }
 
-    /* ---------- Hero Section ---------- */
+    /* ---------- Hero Sections ---------- */
     .hero {
       padding-top: 110px;
       padding-bottom: 18px;
       text-align: center;
-      z-index: 5;
       position: relative;
+      z-index:5;
     }
-
     .hero h2 {
       font-size: 40px;
-      margin: 0 0 8px;
-      text-shadow: 0 8px 40px rgba(147,51,234,0.12);
+      margin-bottom: 8px;
     }
-
     .hero p {
-      margin: 0;
-      color: rgba(230, 238, 248, 0.75);
+      color: rgba(230,238,248,0.75);
     }
 
     /* ---------- Search Bar ---------- */
-    .search-wrap {
-      display: flex;
-      justify-content: center;
-      margin-top: 18px;
-    }
-
+    .search-wrap { display:flex; justify-content:center; margin-top:18px; }
     .search {
-      width: 680px;
-      max-width: 92%;
-      padding: 12px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      background: var(--glass);
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      box-shadow: 0 10px 40px rgba(99, 102, 241, 0.04);
+      width:680px;
+      max-width:92%;
+      padding:12px 18px;
+      border-radius:999px;
+      background:var(--glass);
+      display:flex;
+      gap:10px;
+      align-items:center;
     }
-
     .search input {
-      flex: 1;
-      background: transparent;
-      border: 0;
-      color: inherit;
-      font-size: 16px;
-      outline: none;
+      flex:1;
+      background:transparent;
+      border:none;
+      font-size:16px;
+      color:var(--text-color);
+      outline:none;
     }
 
-/* ---------- Grid Layout ---------- */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 22px;
-  max-width: 1200px;
-  margin: 36px auto;
-  padding: 0 18px;
-  z-index: 5;
-}
+    /* ---------- Grid ---------- */
+    .grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap:22px;
+      max-width:1200px;
+      margin:36px auto;
+      padding:0 18px;
+    }
 
-/* ---------- Card Styling ---------- */
-.card {
-  position: relative;
-  overflow: hidden;
-  border-radius: 14px;
-  padding: 12px;
-  background: rgba(8,9,12,0.8);
-  border: 1px solid rgba(255,255,255,0.03);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-  transition: transform 260ms cubic-bezier(.2,.9,.2,1), box-shadow 260ms;
-  will-change: transform, box-shadow, opacity;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  height: 300px; /* Fixed height to prevent stretching */
-  display: block !important; /* Force block display */
-  flex-direction: column;  /* This might be irrelevant since we are using grid */
-  justify-content: space-between;
-  width: 100%; /* Ensure it takes full width of its container */
-}
-
-    /* Add hover effect to cards */
+    /* ---------- Card ---------- */
+    .card {
+      position:relative;
+      overflow:hidden;
+      border-radius:14px;
+      padding:12px;
+      background:rgba(8,9,12,0.8);
+      border:1px solid rgba(255,255,255,0.03);
+      height:300px;
+      box-shadow:0 8px 30px rgba(0,0,0,0.6);
+      display:block;
+      transition:0.26s;
+    }
     .card:hover {
-      transform: translateY(-5px); /* Lift effect */
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4); /* Shadow effect */
+      transform: translateY(-5px);
+      box-shadow:0 12px 30px rgba(0,0,0,0.4);
     }
-
     .card .thumb {
-      width: 100%;
-      height: 150px; /* Keep it consistent */
-      object-fit: cover;
-      border-radius: 10px;
-      display: block !important;
-    }
-
-    .card .meta {
-      padding: 12px 6px;
-      text-align: center;
-    }
-
-    .card h3 {
-      margin: 0 0 8px 0;
-      font-size: 18px;
-    }
-
-    .card .play {
-      display: inline-block;
-      padding: 10px 14px;
-      border-radius: 10px;
-      border: none;
-      color: var(--button-text-color); /* Use separate button text color */
-      background: linear-gradient(90deg, hsl(var(--accent1)), hsl(var(--accent2)));
-      box-shadow: 0 10px 30px hsla(var(--accent1), 0.18);
-      cursor: pointer;
-      transition: transform 160ms;
+      width:100%;
+      height:150px;
+      border-radius:10px;
+      object-fit:cover;
     }
 
   </style>
 </head>
+
 <body>
+
+  <!-- NAVBAR -->
   <div class="hud">
     <div class="logo">
-      <div class="mark">
-        <img src="favicon.png" alt="Logo" style="width: 40px; height: 40px; border-radius: 9px;">
-      </div>
+      <div class="mark"><img src="favicon.png"></div>
       <div>
         <h1>Diamond</h1>
         <div style="font-size:12px;color:rgba(230,238,248,0.7);">Upgraded Gaming</div>
       </div>
     </div>
 
-<div class="right">
-  <button id="gamesTab" class="active">Games</button>
-  <button id="appsTab">Apps</button>
-  <button id="unlockerTab">Unlocker</button> <!-- New Tab -->
-  <span id="gamesCount" class="pill"></span>
-  <button id="settingsButton">Settings</button>
-</div>
+    <div class="right">
+      <button id="homeTab" class="active">Home</button>
+      <button id="gamesTab">Games</button>
+      <button id="appsTab">Apps</button>
+      <button id="unlockerTab">Unlocker</button>
+      <span id="gamesCount" class="pill"></span>
+      <button id="settingsButton">Settings</button>
+    </div>
   </div>
 
   <main>
-    <section class="hero">
-      <h2>Diamond — Upgraded Gaming</h2>
-      <p>Jump into any game, online, for free!</p>
-      <div class="search-wrap">
-        <div class="search"><input id="q" placeholder="Search..." /></div>
+
+    <!-- HOMEPAGE (DEFAULT) -->
+    <section id="homepageSection" class="hero" style="display:block;">
+      <h2>Welcome to Diamond</h2>
+      <p>The fastest unblocked gaming hub on the web.</p>
+
+      <div style="margin-top:30px; display:flex; justify-content:center; gap:20px; flex-wrap:wrap;">
+        <div style="padding:20px;background:var(--panel);border-radius:12px;width:260px;text-align:center;">
+          <h3>🎮 Games</h3>
+          <p>Play hundreds of online games instantly.</p>
+        </div>
+        <div style="padding:20px;background:var(--panel);border-radius:12px;width:260px;text-align:center;">
+          <h3>📱 Apps</h3>
+          <p>Use apps and tools instantly.</p>
+        </div>
+        <div style="padding:20px;background:var(--panel);border-radius:12px;width:260px;text-align:center;">
+          <h3>🛡️ Unlocker</h3>
+          <p>Bypass restrictions instantly.</p>
+        </div>
       </div>
     </section>
 
-    <section class="grid" id="grid">
-      <!-- cards injected by JS -->
+    <!-- GAMES/APPS HERO (HIDDEN UNTIL TAB SWITCH) -->
+    <section id="contentHero" class="hero" style="display:none;">
+      <h2>Diamond — Upgraded Gaming</h2>
+      <p>Jump into any game, online, for free!</p>
+      <div class="search-wrap">
+        <div class="search">
+          <input id="q" placeholder="Search..." />
+        </div>
+      </div>
     </section>
+
+    <section class="grid" id="grid"></section>
   </main>
 
-  <!-- Modal -->
+  <!-- ========================= -->
+  <!-- GAME / APP IFRAME MODAL  -->
+  <!-- ========================= -->
+
   <div id="modal" style="display:none;position:fixed;inset:0;justify-content:center;align-items:center;background:rgba(2,6,23,0.8);z-index:60">
     <div style="width:95%;max-width:1500px;height:90vh;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);box-shadow:0 30px 80px rgba(0,0,0,0.6);background:#07070b">
       <button id="closeModal" style="position:absolute;right:20px;top:16px;z-index:70;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.06);border:none;color:#fff;cursor:pointer">Close</button>
@@ -364,38 +256,60 @@ h4 {
     </div>
   </div>
 
-<!-- Settings Modal -->
-<div id="settingsModal">
-  <div style="background: #111; padding: 30px; border-radius: 12px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6); max-width: 400px; width: 100%; text-align: center;">
-    <button id="closeSettings" style="position: absolute; right: 20px; top: 16px; padding: 10px 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.1); border: none; color: #fff; cursor: pointer; font-size: 18px;">&times;</button>
-    <h3 style="font-size: 24px; color: #fff; margin-bottom: 20px;">Settings</h3>
-    <h4 style="font-size: 18px; color: #ccc;">Select Theme</h4>
-    <div id="themeOptions" style="display: flex; flex-direction: column; gap: 10px;">
-      <!-- Theme options will be injected here -->
+  <!-- ========================= -->
+  <!--       SETTINGS MODAL      -->
+  <!-- ========================= -->
+
+  <div id="settingsModal">
+    <div style="background: #111; padding: 30px; border-radius: 12px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6); max-width: 400px; width: 100%; text-align: center;">
+      <button id="closeSettings" style="position: absolute; right: 20px; top: 16px; padding: 10px 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.1); border: none; color: #fff; cursor: pointer; font-size: 18px;">&times;</button>
+      <h3 style="font-size: 24px; color: #fff; margin-bottom: 20px;">Settings</h3>
+      <h4 style="font-size: 18px; color: #ccc;">Select Theme</h4>
+      <div id="themeOptions" style="display: flex; flex-direction: column; gap: 10px;">
+        <!-- Theme options injected here -->
+      </div>
     </div>
   </div>
-</div>
 
-  <script>
-// Fetch the tab and iframe elements
+  <!-- ========================= -->
+  <!--       BEGIN JAVASCRIPT    -->
+  <!-- ========================= -->
+<script>
+
+// =========================
+// Element References
+// =========================
+const homeTab = document.getElementById('homeTab');
 const gamesTab = document.getElementById('gamesTab');
 const appsTab = document.getElementById('appsTab');
 const unlockerTab = document.getElementById('unlockerTab');
+
+const homepageSection = document.getElementById('homepageSection');
+const contentHero = document.getElementById('contentHero');
+const grid = document.getElementById('grid');
+
 const gameFrame = document.getElementById('gameFrame');
 const modal = document.getElementById('modal');
 const closeModal = document.getElementById('closeModal');
+
 const settingsButton = document.getElementById('settingsButton');
 const settingsModal = document.getElementById('settingsModal');
 const closeSettings = document.getElementById('closeSettings');
+
 const gamesCountElement = document.getElementById('gamesCount');
 
-// Track the last active tab
-let lastActiveTab = 'games'; // default is 'games'
+// Keep track of last active tab (for closing modal return)
+let lastActiveTab = 'home';
 
-// Load Games and Apps Data
+// =========================
+// Data
+// =========================
 let GAMES = [];
 let APPS = [];
 
+// =========================
+// Load JSON
+// =========================
 function loadGames() {
   fetch('arcade_data.json')
     .then(r => r.json())
@@ -418,17 +332,17 @@ function loadApps() {
     .catch(err => console.error('JSON load error', err));
 }
 
-// Render function to display filtered games/apps
+// =========================
+// Render Items
+// =========================
 function render(items) {
-  const q = document.getElementById('q');
-  const grid = document.getElementById('grid');
+  const q = document.getElementById('q').value.toLowerCase();
   grid.innerHTML = '';
   items
-    .filter(item => item.title.toLowerCase().includes(q.value.toLowerCase()))
+    .filter(item => item.title.toLowerCase().includes(q))
     .forEach(item => grid.appendChild(createCard(item)));
 }
 
-// Function to create a card
 function createCard(item) {
   const el = document.createElement('article');
   el.className = 'card';
@@ -440,12 +354,14 @@ function createCard(item) {
 
   const meta = document.createElement('div');
   meta.className = 'meta';
+
   const h3 = document.createElement('h3');
   h3.textContent = item.title;
+
   const btn = document.createElement('button');
   btn.className = 'play';
   btn.textContent = 'Play';
-  
+
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
     openItem(item);
@@ -453,16 +369,19 @@ function createCard(item) {
 
   meta.appendChild(h3);
   meta.appendChild(btn);
+
   el.appendChild(img);
   el.appendChild(meta);
 
   return el;
 }
 
-// Function to open the selected item in the iframe
+// =========================
+// Open Game/App inside iframe modal
+// =========================
 function openItem(item) {
   fetch(item.src)
-    .then(response => response.text())
+    .then(r => r.text())
     .then(htmlContent => {
       gameFrame.contentDocument.open();
       gameFrame.contentDocument.write(htmlContent);
@@ -473,141 +392,177 @@ function openItem(item) {
       console.error('Error loading item content:', error);
       gameFrame.contentDocument.open();
       gameFrame.contentDocument.write(`
-        <div style="padding: 20px; color: white; background: #b91c1c; text-align: center; font-family: sans-serif; border-radius: 8px;">
-          <h2 style="margin-top: 0; color: white;">🛑 Error Loading Item 🛑</h2>
-          <p>Could not load content. This usually happens when the host server sends the wrong file type.</p>
+        <div style="padding: 20px; color: white; background: #b91c1c; text-align: center; font-family: sans-serif;">
+          <h2>Error Loading Item</h2>
+          <p>Server returned invalid file type.</p>
         </div>
       `);
       gameFrame.contentDocument.close();
+      modal.style.display = 'flex';
     });
 }
 
-// Function to update the count based on the active tab
+// =========================
+// Update Count
+// =========================
 function updateCount() {
-  const itemCount = gamesTab.classList.contains('active') ? GAMES.length : APPS.length;
-  gamesCountElement.textContent = `Count: ${itemCount}`;
+  if (gamesTab.classList.contains('active')) {
+    gamesCountElement.textContent = `Count: ${GAMES.length}`;
+  } else if (appsTab.classList.contains('active')) {
+    gamesCountElement.textContent = `Count: ${APPS.length}`;
+  } else {
+    gamesCountElement.textContent = "";
+  }
 }
 
-// Tab Switch Event Listeners
+// =========================
+// TAB SWITCHING
+// =========================
 
-// Games Tab
+// ---- HOME TAB ----
+homeTab.addEventListener('click', () => {
+  setActiveTab('home');
+
+  homepageSection.style.display = 'block';
+  contentHero.style.display = 'none';
+  grid.innerHTML = "";
+
+  modal.style.display = 'none';
+
+  lastActiveTab = 'home';
+});
+
+// ---- GAMES TAB ----
 gamesTab.addEventListener('click', () => {
-  gamesTab.classList.add('active');
-  appsTab.classList.remove('active');
-  unlockerTab.classList.remove('active');
-  
-  // Load Games and Render them
-  loadGames();
-  gameFrame.src = ''; // Clear iframe for games
-  modal.style.display = 'none'; // Close modal
+  setActiveTab('games');
 
-  // Set last active tab to 'games'
+  homepageSection.style.display = 'none';
+  contentHero.style.display = 'block';
+
+  loadGames();
+
+  modal.style.display = 'none';
+
   lastActiveTab = 'games';
 });
 
-// Apps Tab
+// ---- APPS TAB ----
 appsTab.addEventListener('click', () => {
-  appsTab.classList.add('active');
-  gamesTab.classList.remove('active');
-  unlockerTab.classList.remove('active');
-  
-  // Load Apps and Render them
-  loadApps();
-  gameFrame.src = ''; // Clear iframe for apps
-  modal.style.display = 'none'; // Close modal
+  setActiveTab('apps');
 
-  // Set last active tab to 'apps'
+  homepageSection.style.display = 'none';
+  contentHero.style.display = 'block';
+
+  loadApps();
+
+  modal.style.display = 'none';
+
   lastActiveTab = 'apps';
 });
 
-// Unlocker Tab
+// ---- UNLOCKER TAB ----
 unlockerTab.addEventListener('click', () => {
-  unlockerTab.classList.add('active');
-  gamesTab.classList.remove('active');
-  appsTab.classList.remove('active');
-  
-  // Load Unlocker iframe
-  gameFrame.src = 'https://ihce0h92o3nndk0.pages.dev/'; // Set iframe source
-  modal.style.display = 'flex'; // Open modal with iframe content
+  setActiveTab('unlocker');
+
+  homepageSection.style.display = 'none';
+  contentHero.style.display = 'none';
+
+  gameFrame.src = "https://ihce0h92o3nndk0.pages.dev/";
+  modal.style.display = 'flex';
+
+  lastActiveTab = 'unlocker';
 });
 
+// =========================
+// Set Active Tab Helper
+// =========================
+function setActiveTab(tab) {
+  homeTab.classList.remove('active');
+  gamesTab.classList.remove('active');
+  appsTab.classList.remove('active');
+  unlockerTab.classList.remove('active');
+
+  if (tab === 'home') homeTab.classList.add('active');
+  if (tab === 'games') gamesTab.classList.add('active');
+  if (tab === 'apps') appsTab.classList.add('active');
+  if (tab === 'unlocker') unlockerTab.classList.add('active');
+}
+
+// =========================
 // Close Modal
+// =========================
 closeModal.addEventListener('click', () => {
   modal.style.display = 'none';
-  gameFrame.src = ''; // Clear iframe content
+  gameFrame.src = '';
 
-  // Ensure only the correct tab is active when closing the modal
+  // Return to last active tab
   if (lastActiveTab === 'games') {
-    gamesTab.classList.add('active');
-    loadGames();
+    gamesTab.click();
   } else if (lastActiveTab === 'apps') {
-    appsTab.classList.add('active');
-    loadApps();
+    appsTab.click();
+  } else if (lastActiveTab === 'home') {
+    homeTab.click();
   }
 });
 
-// Settings Modal Logic
-
-// Open the settings modal
+// =========================
+// Settings Modal
+// =========================
 settingsButton.addEventListener('click', () => {
   settingsModal.style.display = 'flex';
-  setTimeout(() => settingsModal.classList.add('show'), 10); // Smooth opening
+  setTimeout(() => settingsModal.classList.add('show'), 10);
 });
 
-// Close the settings modal
 closeSettings.addEventListener('click', () => {
   settingsModal.classList.remove('show');
-  setTimeout(() => settingsModal.style.display = 'none', 300); // Smooth closing
+  setTimeout(() => settingsModal.style.display = 'none', 300);
 });
 
-// Fetch themes from themes.json
+// Load themes.json
 fetch('themes.json')
-  .then(response => response.json())
+  .then(r => r.json())
   .then(data => {
-    if (data && data.themes) {
+    if (data?.themes) {
+      const themeOptions = document.getElementById('themeOptions');
       data.themes.forEach(theme => {
-        const themeOption = document.createElement('div');
-        themeOption.className = 'theme-option';
-        themeOption.textContent = theme.name;
-        themeOption.addEventListener('click', () => changeTheme(theme, themeOption));
-        themeOptions.appendChild(themeOption);
+        const option = document.createElement('div');
+        option.className = 'theme-option';
+        option.textContent = theme.name;
+
+        option.addEventListener('click', () => changeTheme(theme, option));
+        themeOptions.appendChild(option);
       });
     }
-  })
-  .catch(error => {
-    console.error('Error loading themes:', error);
   });
 
-// Function to change the theme
+// Change Theme
 function changeTheme(theme, selectedOption) {
-  // Change CSS variables based on the selected theme
-  Object.keys(theme).forEach(varName => {
-    document.documentElement.style.setProperty(varName, theme[varName]);
+  Object.keys(theme).forEach(key => {
+    document.documentElement.style.setProperty(key, theme[key]);
   });
 
-  // Update active state for theme options
-  document.querySelectorAll('.theme-option').forEach(option => {
-    option.classList.remove('active');
-  });
+  document.querySelectorAll('.theme-option')
+    .forEach(el => el.classList.remove('active'));
   selectedOption.classList.add('active');
 }
 
-// Initialize with Games Tab Active
-gamesTab.classList.add('active');
-loadGames();
-  
-    // Function to update the count based on active tab
-    function updateCount() {
-      const itemCount = gamesTab.classList.contains('active') ? GAMES.length : APPS.length;
-      gamesCountElement.textContent = `Count: ${itemCount}`;
-    }
-  document.getElementById("q").addEventListener("input", () => {
-  if (gamesTab.classList.contains("active")) {
-    render(GAMES);
-  } else {
-    render(APPS);
-  }
+// =========================
+// Search Input Reactive
+// =========================
+document.getElementById('q').addEventListener('input', () => {
+  if (gamesTab.classList.contains('active')) render(GAMES);
+  if (appsTab.classList.contains('active')) render(APPS);
 });
-  </script>
+
+// =========================
+// Initialize with Homepage
+// =========================
+homeTab.classList.add('active');
+homepageSection.style.display = "block";
+contentHero.style.display = "none";
+grid.innerHTML = "";
+
+</script>
+
 </body>
 </html>
