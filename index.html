@@ -193,6 +193,19 @@
       border-color: rgba(255,255,255,0.25);
       box-shadow: 0 0 12px rgba(0,0,0,0.4);
     }
+
+    #settingsModal.show {
+  opacity: 1;
+}
+
+#settingsModal.show > div {
+  transform: scale(1);
+}
+
+#settingsModal > div {
+  transform: scale(0.95);
+}
+
   </style>
 </head>
 
@@ -539,11 +552,20 @@
     }
 
 
-    /* SETTINGS */
-    settingsButton.onclick = () => {
-      settingsModal.classList.add('show');
-      settingsModal.style.display = 'flex';
-    };
+settingsButton.onclick = () => {
+  settingsModal.style.display = 'flex';
+  requestAnimationFrame(() => {
+    settingsModal.classList.add('show');
+  });
+};
+
+closeSettings.onclick = () => {
+  settingsModal.classList.remove('show');
+  setTimeout(() => {
+    settingsModal.style.display = 'none';
+  }, 250);
+};
+
 
     closeSettings.onclick = () => {
       settingsModal.classList.remove('show');
