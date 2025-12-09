@@ -29,7 +29,7 @@
       overflow-x: hidden;
     }
 
-    /* HUD */
+    /* HUD BAR */
     .hud {
       position: fixed;
       top: 20px;
@@ -50,16 +50,12 @@
     }
 
     .logo { display:flex; align-items:center; gap:12px; }
-
     .logo img {
       width:42px;
       height:42px;
       border-radius:10px;
       box-shadow:0 4px 18px rgba(147,51,234,0.4);
     }
-
-    .logo h1 { font-size:20px; font-weight:700; margin-bottom:-4px; }
-    .logo small { font-size:12px; color:var(--text-soft); }
 
     .right { margin-left:auto; display:flex; align-items:center; gap:10px; }
 
@@ -74,24 +70,12 @@
       transition:150ms;
     }
 
-    .hud button:hover {
-      background:rgba(255,255,255,0.10);
-      transform:translateY(-1px);
-    }
-
     .hud button.active {
       background:linear-gradient(135deg, hsl(var(--accent1)), hsl(var(--accent2)));
       box-shadow:0 6px 20px rgba(0,0,0,0.35);
     }
 
-    .pill {
-      padding:6px 12px;
-      background:rgba(255,255,255,0.06);
-      border-radius:999px;
-      font-size:13px;
-    }
-
-    /* SEARCH (now global, not part of hero) */
+    /* SEARCH BAR */
     #searchContainer {
       margin-top:150px;
       display:none;
@@ -110,15 +94,6 @@
       transition:150ms;
     }
 
-    .search:focus-within {
-      border:1px solid rgba(99,102,241,0.45);
-      box-shadow:0 0 14px rgba(99,102,241,0.35);
-    }
-
-    #settingsModal.show {
-  opacity: 1 !important;
-}
-
     .search input {
       flex:1;
       background:transparent;
@@ -128,7 +103,6 @@
       color:var(--text);
     }
 
-    /* GRID */
     .grid {
       display:grid;
       grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
@@ -175,35 +149,12 @@
     }
 
     .play:hover { transform:translateY(-2px); }
-
-    /* SETTINGS BUTTONS */
-.theme-option {
-  padding: 12px 16px;
-  margin: 8px 0;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 150ms;
-  font-weight: 600;
-}
-
-.theme-option:hover {
-  background: rgba(255,255,255,0.12);
-}
-
-.theme-option.active {
-  background: linear-gradient(135deg, hsl(var(--accent1)), hsl(var(--accent2)));
-  border-color: rgba(255,255,255,0.25);
-  box-shadow: 0 0 12px rgba(0,0,0,0.4);
-}
-
   </style>
 </head>
 
 <body>
 
-  <!-- TOP BAR -->
+  <!-- HUD TOP BAR -->
   <div class="hud">
     <div class="logo">
       <img src="favicon.png" alt="Logo">
@@ -214,8 +165,7 @@
     </div>
 
     <div class="right">
-      <button id="homeTab" class="active">Home</button>
-      <button id="gamesTab">Games</button>
+      <button id="gamesTab" class="active">Games</button>
       <button id="appsTab">Apps</button>
       <button id="unlockerTab">Unlocker</button>
       <span id="gamesCount" class="pill" style="display:none;">Count: 0</span>
@@ -223,45 +173,40 @@
     </div>
   </div>
 
-  <!-- SEARCH BAR NOW GLOBAL -->
+  <!-- SEARCH BAR -->
   <div id="searchContainer">
     <div class="search">
       <input id="q" placeholder="Search...">
     </div>
   </div>
 
-  <main>
-    <!-- HOME SECTION -->
-    <section id="homeSection" style="padding-top:130px; text-align:center;">
-      <h2 style="
-        font-size:48px;
-        font-weight:800;
-        background:linear-gradient(90deg, hsl(var(--accent1)), hsl(var(--accent2)));
-        -webkit-background-clip:text;
-        -webkit-text-fill-color:transparent;
-      ">
-        Diamond — Upgraded Gaming
-      </h2>
+  <!-- HERO (now inside Games section) -->
+  <div id="gamesHero" style="
+    width:100%;
+    max-width:1250px;
+    margin:150px auto 20px auto;
+    padding:40px 22px;
+    text-align:center;
+    display:none;
+  ">
+    <h1 style="
+      font-size:52px;
+      font-weight:800;
+      background:linear-gradient(90deg, hsl(var(--accent1)), hsl(var(--accent2)));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    ">
+      Diamond — Upgraded Gaming
+    </h1>
 
-      <p style="color:var(--text-soft); margin-top:6px;">
-        Dive into endless gaming.
-      </p>
+    <p style="color:var(--text-soft); margin-top:10px; font-size:18px;">
+      Dive into endless gaming.
+    </p>
+  </div>
 
-      <div style="max-width:1250px; margin:40px auto; padding:0 22px;">
-        <h3 style="text-align:left; font-size:25px; margin-bottom:3px;">Featured Games:</h3>
-
-        <div class="grid" id="featuredGrid"></div>
-      </div>
-    </section>
-
-    <!-- HERO REMOVED COMPLETELY -->
-
-    <!-- GRID FOR GAMES/APPS -->
-    <section class="grid" id="grid" style="display:none;"></section>
-
-  </main>
-
-  <!-- MODAL -->
+  <!-- GAMES/APPS GRID -->
+  <section class="grid" id="grid" style="display:none;"></section>
+  <!-- GAME MODAL -->
   <div id="modal" style="
     display:none;
     position:fixed;
@@ -352,16 +297,15 @@
       </button>
     </div>
   </div>
+
   <script>
-    /* ELEMENTS */
-    const homeTab = document.getElementById('homeTab');
+    /* ELEMENT HOOKS */
     const gamesTab = document.getElementById('gamesTab');
     const appsTab = document.getElementById('appsTab');
     const unlockerTab = document.getElementById('unlockerTab');
 
-    const homeSection = document.getElementById('homeSection');
     const grid = document.getElementById('grid');
-    const featuredGrid = document.getElementById('featuredGrid');
+    const gamesHero = document.getElementById('gamesHero');
 
     const searchContainer = document.getElementById('searchContainer');
     const searchInput = document.getElementById('q');
@@ -377,25 +321,9 @@
 
     const gamesCountElement = document.getElementById('gamesCount');
 
-    let lastActiveTab = "home";
+    let lastActiveTab = "games";
     let GAMES = [];
     let APPS = [];
-
-    /* FEATURED GAMES */
-
-async function renderFeatured() {
-  const data = await fetch("arcade_data.json").then(r => r.json());
-  const all = data.games || [];
-
-  const picks = ["Roblox", "Hollow Knight", "Sad Satan", "Deltarune"];
-
-  featuredGrid.innerHTML = "";
-
-  all
-    .filter(g => picks.includes(g.title))
-    .forEach(g => featuredGrid.appendChild(createCard(g)));
-}
-
 
     /* LOAD GAMES */
     function loadGames() {
@@ -487,38 +415,21 @@ async function renderFeatured() {
       if (gameFrame.requestFullscreen) gameFrame.requestFullscreen();
     };
 
+    /* IF EXIT FULLSCREEN */
     document.addEventListener('fullscreenchange', () => {
       if (!document.fullscreenElement) modal.style.padding = "";
     });
 
-    /* TAB LOGIC (NO MORE HERO) */
-
-    homeTab.onclick = () => {
-      lastActiveTab = "home";
-
-      homeTab.classList.add('active');
-      gamesTab.classList.remove('active');
-      appsTab.classList.remove('active');
-      unlockerTab.classList.remove('active');
-
-      /* Show only home */
-      homeSection.style.display = "block";
-      grid.style.display = "none";
-      searchContainer.style.display = "none";
-      gamesCountElement.style.display = "none";
-
-      renderFeatured();
-    };
+    /* TABS */
 
     gamesTab.onclick = () => {
       lastActiveTab = "games";
 
       gamesTab.classList.add('active');
-      homeTab.classList.remove('active');
       appsTab.classList.remove('active');
       unlockerTab.classList.remove('active');
 
-      homeSection.style.display = "none";
+      gamesHero.style.display = "block";
       grid.style.display = "grid";
       searchContainer.style.display = "flex";
       gamesCountElement.style.display = "inline-block";
@@ -530,11 +441,10 @@ async function renderFeatured() {
       lastActiveTab = "apps";
 
       appsTab.classList.add('active');
-      homeTab.classList.remove('active');
       gamesTab.classList.remove('active');
       unlockerTab.classList.remove('active');
 
-      homeSection.style.display = "none";
+      gamesHero.style.display = "none";
       grid.style.display = "grid";
       searchContainer.style.display = "flex";
       gamesCountElement.style.display = "inline-block";
@@ -544,15 +454,19 @@ async function renderFeatured() {
 
     unlockerTab.onclick = () => {
       unlockerTab.classList.add('active');
-      homeTab.classList.remove('active');
-      gamesTab.classList.remove('active');
       appsTab.classList.remove('active');
+      gamesTab.classList.remove('active');
+
+      gamesHero.style.display = "none";
+      grid.style.display = "none";
+      searchContainer.style.display = "none";
+      gamesCountElement.style.display = "none";
 
       modal.style.display = 'flex';
       gameFrame.src = "https://ihce0h92o3nndk0.pages.dev/";
     };
 
-    /* SEARCH WORKS IN BOTH TABS */
+    /* SEARCH */
     searchInput?.addEventListener('input', () => {
       if (lastActiveTab === "games") render(GAMES);
       if (lastActiveTab === "apps") render(APPS);
@@ -599,7 +513,7 @@ async function renderFeatured() {
       });
 
     /* INITIAL LOAD */
-    renderFeatured();
+    gamesTab.click();
   </script>
 
 </body>
