@@ -25,7 +25,6 @@
       background: var(--bg);
       color: var(--text);
       font-family: Inter, system-ui, sans-serif;
-      -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
 
@@ -46,7 +45,7 @@
       backdrop-filter: blur(10px) saturate(70%);
       border:1px solid rgba(255,255,255,0.05);
       box-shadow: 0 4px 16px rgba(0,0,0,0.35);
-      z-index: 49 !important;
+      z-index: 49;
     }
 
     .logo { display:flex; align-items:center; gap:12px; }
@@ -75,9 +74,9 @@
       box-shadow:0 6px 20px rgba(0,0,0,0.35);
     }
 
-    /* SEARCH BAR */
+    /* SEARCH UNDER HUD */
     #searchContainer {
-      margin-top:150px;
+      margin-top:80px; /* FIXED */
       display:none;
       justify-content:center;
     }
@@ -90,8 +89,6 @@
       display:flex;
       background:rgba(255,255,255,0.05);
       border:1px solid rgba(255,255,255,0.05);
-      box-shadow:0 0 8px rgba(99,102,241,0.18);
-      transition:150ms;
     }
 
     .search input {
@@ -103,6 +100,7 @@
       color:var(--text);
     }
 
+    /* GRID */
     .grid {
       display:grid;
       grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
@@ -119,12 +117,6 @@
       height:300px;
       padding:12px;
       transition:150ms;
-      box-shadow:0 2px 6px rgba(0,0,0,0.25);
-    }
-
-    .card:hover {
-      transform:translateY(-3px);
-      box-shadow:0 4px 10px rgba(0,0,0,0.22);
     }
 
     .thumb {
@@ -132,23 +124,10 @@
       height:155px;
       border-radius:10px;
       object-fit:cover;
-      box-shadow:0 3px 12px rgba(0,0,0,0.28);
     }
 
     .meta { text-align:center; padding-top:14px; }
     .meta h3 { font-size:18px; margin-bottom:10px; }
-
-    .play {
-      padding:10px 16px;
-      border:none;
-      border-radius:10px;
-      background:linear-gradient(90deg, hsl(var(--accent1)), hsl(var(--accent2)));
-      color:white;
-      cursor:pointer;
-      transition:150ms;
-    }
-
-    .play:hover { transform:translateY(-2px); }
   </style>
 </head>
 
@@ -173,18 +152,18 @@
     </div>
   </div>
 
-  <!-- SEARCH BAR -->
+  <!-- SEARCH RIGHT UNDER HUD -->
   <div id="searchContainer">
     <div class="search">
       <input id="q" placeholder="Search...">
     </div>
   </div>
 
-  <!-- HERO (now inside Games section) -->
+  <!-- HERO UNDER SEARCH -->
   <div id="gamesHero" style="
     width:100%;
     max-width:1250px;
-    margin:150px auto 20px auto;
+    margin:40px auto 20px auto;
     padding:40px 22px;
     text-align:center;
     display:none;
@@ -204,7 +183,7 @@
     </p>
   </div>
 
-  <!-- GAMES/APPS GRID -->
+  <!-- GRID -->
   <section class="grid" id="grid" style="display:none;"></section>
   <!-- GAME MODAL -->
   <div id="modal" style="
@@ -224,13 +203,11 @@
       border-radius:var(--radius);
       border:1px solid rgba(255,255,255,0.05);
       overflow:hidden;
-      box-shadow:0 10px 30px rgba(0,0,0,0.45);
       position:relative;
     ">
       <button id="closeModal" style="
         position:absolute;
-        top:16px;
-        right:20px;
+        top:16px; right:20px;
         padding:8px 12px;
         background:rgba(255,255,255,0.12);
         border:none;
@@ -242,8 +219,7 @@
 
       <button id="fullscreenBtn" style="
         position:absolute;
-        top:16px;
-        right:90px;
+        top:16px; right:90px;
         padding:8px 12px;
         background:rgba(255,255,255,0.12);
         border:none;
@@ -279,7 +255,6 @@
       max-width:420px;
       border:1px solid rgba(255,255,255,0.08);
       text-align:center;
-      transition:300ms;
     ">
       <h2 style="margin-bottom:10px;">Settings</h2>
       <div id="themeOptions"></div>
@@ -299,7 +274,7 @@
   </div>
 
   <script>
-    /* ELEMENT HOOKS */
+    /* ELEMENTS */
     const gamesTab = document.getElementById('gamesTab');
     const appsTab = document.getElementById('appsTab');
     const unlockerTab = document.getElementById('unlockerTab');
@@ -365,7 +340,6 @@
       const img = document.createElement('img');
       img.className = 'thumb';
       img.src = item.thumb;
-      img.loading = "lazy";
 
       const meta = document.createElement('div');
       meta.className = 'meta';
@@ -415,13 +389,12 @@
       if (gameFrame.requestFullscreen) gameFrame.requestFullscreen();
     };
 
-    /* IF EXIT FULLSCREEN */
+    /* EXIT FULLSCREEN */
     document.addEventListener('fullscreenchange', () => {
       if (!document.fullscreenElement) modal.style.padding = "";
     });
 
-    /* TABS */
-
+    /* TAB LOGIC */
     gamesTab.onclick = () => {
       lastActiveTab = "games";
 
@@ -453,6 +426,8 @@
     };
 
     unlockerTab.onclick = () => {
+      lastActiveTab = "unlocker";
+
       unlockerTab.classList.add('active');
       appsTab.classList.remove('active');
       gamesTab.classList.remove('active');
@@ -466,13 +441,13 @@
       gameFrame.src = "https://ihce0h92o3nndk0.pages.dev/";
     };
 
-    /* SEARCH */
-    searchInput?.addEventListener('input', () => {
+    /* SEARCH FILTER */
+    searchInput.addEventListener('input', () => {
       if (lastActiveTab === "games") render(GAMES);
       if (lastActiveTab === "apps") render(APPS);
     });
 
-    /* COUNT */
+    /* COUNT DISPLAY */
     function updateCount() {
       gamesCountElement.textContent =
         "Count: " + (lastActiveTab === "games" ? GAMES.length : APPS.length);
