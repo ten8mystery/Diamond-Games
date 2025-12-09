@@ -25,10 +25,11 @@
       background: var(--bg);
       color: var(--text);
       font-family: Inter, system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
 
-    /* HUD BAR */
+    /* HUD */
     .hud {
       position: fixed;
       top: 20px;
@@ -45,16 +46,20 @@
       backdrop-filter: blur(10px) saturate(70%);
       border:1px solid rgba(255,255,255,0.05);
       box-shadow: 0 4px 16px rgba(0,0,0,0.35);
-      z-index: 49;
+      z-index: 49 !important;
     }
 
     .logo { display:flex; align-items:center; gap:12px; }
+
     .logo img {
       width:42px;
       height:42px;
       border-radius:10px;
       box-shadow:0 4px 18px rgba(147,51,234,0.4);
     }
+
+    .logo h1 { font-size:20px; font-weight:700; margin-bottom:-4px; }
+    .logo small { font-size:12px; color:var(--text-soft); }
 
     .right { margin-left:auto; display:flex; align-items:center; gap:10px; }
 
@@ -69,14 +74,26 @@
       transition:150ms;
     }
 
+    .hud button:hover {
+      background:rgba(255,255,255,0.10);
+      transform:translateY(-1px);
+    }
+
     .hud button.active {
       background:linear-gradient(135deg, hsl(var(--accent1)), hsl(var(--accent2)));
       box-shadow:0 6px 20px rgba(0,0,0,0.35);
     }
 
-    /* SEARCH UNDER HUD */
+    .pill {
+      padding:6px 12px;
+      background:rgba(255,255,255,0.06);
+      border-radius:999px;
+      font-size:13px;
+    }
+
+    /* SEARCH */
     #searchContainer {
-      margin-top:80px; /* FIXED */
+      margin-top:150px;
       display:none;
       justify-content:center;
     }
@@ -89,6 +106,13 @@
       display:flex;
       background:rgba(255,255,255,0.05);
       border:1px solid rgba(255,255,255,0.05);
+      box-shadow:0 0 8px rgba(99,102,241,0.18);
+      transition:150ms;
+    }
+
+    .search:focus-within {
+      border:1px solid rgba(99,102,241,0.45);
+      box-shadow:0 0 14px rgba(99,102,241,0.35);
     }
 
     .search input {
@@ -117,6 +141,12 @@
       height:300px;
       padding:12px;
       transition:150ms;
+      box-shadow:0 2px 6px rgba(0,0,0,0.25);
+    }
+
+    .card:hover {
+      transform:translateY(-3px);
+      box-shadow:0 4px 10px rgba(0,0,0,0.22);
     }
 
     .thumb {
@@ -124,16 +154,51 @@
       height:155px;
       border-radius:10px;
       object-fit:cover;
+      box-shadow:0 3px 12px rgba(0,0,0,0.28);
     }
 
     .meta { text-align:center; padding-top:14px; }
     .meta h3 { font-size:18px; margin-bottom:10px; }
+
+    .play {
+      padding:10px 16px;
+      border:none;
+      border-radius:10px;
+      background:linear-gradient(90deg, hsl(var(--accent1)), hsl(var(--accent2)));
+      color:white;
+      cursor:pointer;
+      transition:150ms;
+    }
+
+    .play:hover { transform:translateY(-2px); }
+
+    /* SETTINGS BUTTONS */
+    .theme-option {
+      padding: 12px 16px;
+      margin: 8px 0;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 150ms;
+      font-weight: 600;
+    }
+
+    .theme-option:hover {
+      background: rgba(255,255,255,0.12);
+    }
+
+    .theme-option.active {
+      background: linear-gradient(135deg, hsl(var(--accent1)), hsl(var(--accent2)));
+      border-color: rgba(255,255,255,0.25);
+      box-shadow: 0 0 12px rgba(0,0,0,0.4);
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- HUD TOP BAR -->
+  <!-- TOP BAR -->
   <div class="hud">
     <div class="logo">
       <img src="favicon.png" alt="Logo">
@@ -152,40 +217,43 @@
     </div>
   </div>
 
-  <!-- SEARCH RIGHT UNDER HUD -->
-  <div id="searchContainer">
-    <div class="search">
-      <input id="q" placeholder="Search...">
-    </div>
-  </div>
-
-  <!-- HERO UNDER SEARCH -->
-  <div id="gamesHero" style="
+  <!-- HERO (for Games + Apps) -->
+  <div id="mainHero" style="
     width:100%;
-    max-width:1250px;
-    margin:40px auto 20px auto;
-    padding:40px 22px;
     text-align:center;
+    margin-top:140px;
+    margin-bottom:30px;
     display:none;
   ">
-    <h1 style="
-      font-size:52px;
+    <h2 style="
+      font-size:48px;
       font-weight:800;
       background:linear-gradient(90deg, hsl(var(--accent1)), hsl(var(--accent2)));
       -webkit-background-clip:text;
       -webkit-text-fill-color:transparent;
     ">
       Diamond — Upgraded Gaming
-    </h1>
+    </h2>
 
-    <p style="color:var(--text-soft); margin-top:10px; font-size:18px;">
-      Dive into endless gaming.
+    <p style="color:var(--text-soft); font-size:18px; margin-top:6px;">
+      Browse everything.
     </p>
   </div>
 
-  <!-- GRID -->
-  <section class="grid" id="grid" style="display:none;"></section>
-  <!-- GAME MODAL -->
+  <!-- SEARCH BAR -->
+  <div id="searchContainer">
+    <div class="search">
+      <input id="q" placeholder="Search...">
+    </div>
+  </div>
+  <main>
+
+    <!-- GRID FOR GAMES/APPS -->
+    <section class="grid" id="grid" style="display:none;"></section>
+
+  </main>
+
+  <!-- MODAL -->
   <div id="modal" style="
     display:none;
     position:fixed;
@@ -203,11 +271,13 @@
       border-radius:var(--radius);
       border:1px solid rgba(255,255,255,0.05);
       overflow:hidden;
+      box-shadow:0 10px 30px rgba(0,0,0,0.45);
       position:relative;
     ">
       <button id="closeModal" style="
         position:absolute;
-        top:16px; right:20px;
+        top:16px;
+        right:20px;
         padding:8px 12px;
         background:rgba(255,255,255,0.12);
         border:none;
@@ -219,7 +289,8 @@
 
       <button id="fullscreenBtn" style="
         position:absolute;
-        top:16px; right:90px;
+        top:16px;
+        right:90px;
         padding:8px 12px;
         background:rgba(255,255,255,0.12);
         border:none;
@@ -231,7 +302,7 @@
 
       <iframe id="gameFrame"
         style="width:100%;height:100%;border:none"
-        sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups allow-popups-to-escape-sandbox"></iframe>
+        sandbox="allow-scripts allow-same-origin allow-pointer-lock"></iframe>
     </div>
   </div>
 
@@ -255,6 +326,7 @@
       max-width:420px;
       border:1px solid rgba(255,255,255,0.08);
       text-align:center;
+      transition:300ms;
     ">
       <h2 style="margin-bottom:10px;">Settings</h2>
       <div id="themeOptions"></div>
@@ -272,7 +344,6 @@
       </button>
     </div>
   </div>
-
   <script>
     /* ELEMENTS */
     const gamesTab = document.getElementById('gamesTab');
@@ -280,7 +351,7 @@
     const unlockerTab = document.getElementById('unlockerTab');
 
     const grid = document.getElementById('grid');
-    const gamesHero = document.getElementById('gamesHero');
+    const featuredGrid = document.getElementById('featuredGrid');
 
     const searchContainer = document.getElementById('searchContainer');
     const searchInput = document.getElementById('q');
@@ -296,9 +367,12 @@
 
     const gamesCountElement = document.getElementById('gamesCount');
 
+    const mainHero = document.getElementById('mainHero');
+
     let lastActiveTab = "games";
     let GAMES = [];
     let APPS = [];
+
 
     /* LOAD GAMES */
     function loadGames() {
@@ -340,6 +414,7 @@
       const img = document.createElement('img');
       img.className = 'thumb';
       img.src = item.thumb;
+      img.loading = "lazy";
 
       const meta = document.createElement('div');
       meta.className = 'meta';
@@ -389,12 +464,16 @@
       if (gameFrame.requestFullscreen) gameFrame.requestFullscreen();
     };
 
-    /* EXIT FULLSCREEN */
     document.addEventListener('fullscreenchange', () => {
       if (!document.fullscreenElement) modal.style.padding = "";
     });
 
-    /* TAB LOGIC */
+
+    /* ============================
+       TAB SWITCHING
+       ============================ */
+
+    /* GAMES TAB */
     gamesTab.onclick = () => {
       lastActiveTab = "games";
 
@@ -402,14 +481,18 @@
       appsTab.classList.remove('active');
       unlockerTab.classList.remove('active');
 
-      gamesHero.style.display = "block";
-      grid.style.display = "grid";
+      /* SHOW HERO + SEARCH */
+      mainHero.style.display = "block";
       searchContainer.style.display = "flex";
+
+      /* SHOW GRID */
+      grid.style.display = "grid";
       gamesCountElement.style.display = "inline-block";
 
       loadGames();
     };
 
+    /* APPS TAB */
     appsTab.onclick = () => {
       lastActiveTab = "apps";
 
@@ -417,41 +500,44 @@
       gamesTab.classList.remove('active');
       unlockerTab.classList.remove('active');
 
-      gamesHero.style.display = "none";
-      grid.style.display = "grid";
+      /* ALSO SHOW THE HERO ON APPS */
+      mainHero.style.display = "block";
+
       searchContainer.style.display = "flex";
+      grid.style.display = "grid";
       gamesCountElement.style.display = "inline-block";
 
       loadApps();
     };
 
+    /* UNLOCKER TAB */
     unlockerTab.onclick = () => {
-      lastActiveTab = "unlocker";
-
       unlockerTab.classList.add('active');
-      appsTab.classList.remove('active');
       gamesTab.classList.remove('active');
+      appsTab.classList.remove('active');
 
-      gamesHero.style.display = "none";
-      grid.style.display = "none";
+      /* hide search + hero */
+      mainHero.style.display = "none";
       searchContainer.style.display = "none";
-      gamesCountElement.style.display = "none";
+      grid.style.display = "none";
 
       modal.style.display = 'flex';
       gameFrame.src = "https://ihce0h92o3nndk0.pages.dev/";
     };
 
-    /* SEARCH FILTER */
-    searchInput.addEventListener('input', () => {
+
+    /* SEARCH */
+    searchInput?.addEventListener('input', () => {
       if (lastActiveTab === "games") render(GAMES);
       if (lastActiveTab === "apps") render(APPS);
     });
 
-    /* COUNT DISPLAY */
+    /* COUNT */
     function updateCount() {
       gamesCountElement.textContent =
         "Count: " + (lastActiveTab === "games" ? GAMES.length : APPS.length);
     }
+
 
     /* SETTINGS */
     settingsButton.onclick = () => {
@@ -463,6 +549,7 @@
       settingsModal.classList.remove('show');
       setTimeout(() => settingsModal.style.display = 'none', 250);
     };
+
 
     /* THEMES */
     fetch('themes.json')
@@ -488,7 +575,10 @@
       });
 
     /* INITIAL LOAD */
-    gamesTab.click();
+    mainHero.style.display = "block";
+    searchContainer.style.display = "flex";
+    grid.style.display = "grid";
+    loadGames();
   </script>
 
 </body>
