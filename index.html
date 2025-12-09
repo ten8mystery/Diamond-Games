@@ -126,7 +126,6 @@
       transition:150ms;
     }
 
-    /* Glow */
     .search:focus-within {
       border:1px solid rgba(99,102,241,0.45);
       box-shadow:0 0 14px rgba(99,102,241,0.35);
@@ -226,7 +225,6 @@
       z-index:100;
     }
 
-    /* FULLSCREEN BUTTON */
     #fullscreenBtn {
       position:absolute;
       right:90px;
@@ -327,229 +325,249 @@
         sandbox="allow-scripts allow-same-origin allow-pointer-lock"></iframe>
     </div>
   </div>
-<script>
-  const gamesTab = document.getElementById('gamesTab');
-  const appsTab = document.getElementById('appsTab');
-  const unlockerTab = document.getElementById('unlockerTab');
+  <!-- SETTINGS MODAL FIX (this was missing before) -->
+  <div id="settingsModal">
+    <div>
+      <h2 style="margin-bottom:10px;">Settings</h2>
 
-  const modal = document.getElementById('modal');
-  const gameFrame = document.getElementById('gameFrame');
-  const closeModal = document.getElementById('closeModal');
-  const fullscreenBtn = document.getElementById('fullscreenBtn');
+      <div id="themeOptions"></div>
 
-  const searchInput = document.getElementById('q');
+      <button id="closeSettings"
+        style="
+          margin-top:20px;
+          padding:10px 16px;
+          border:none;
+          border-radius:10px;
+          background:rgba(255,255,255,0.08);
+          color:white;
+          cursor:pointer;
+        ">
+        Close
+      </button>
+    </div>
+  </div>
 
-  const settingsModal = document.getElementById('settingsModal');
-  const closeSettings = document.getElementById('closeSettings');
-  const settingsButton = document.getElementById('settingsButton');
+  <script>
+    const gamesTab = document.getElementById('gamesTab');
+    const appsTab = document.getElementById('appsTab');
+    const unlockerTab = document.getElementById('unlockerTab');
 
-  const gamesCountElement = document.getElementById('gamesCount');
+    const modal = document.getElementById('modal');
+    const gameFrame = document.getElementById('gameFrame');
+    const closeModal = document.getElementById('closeModal');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-  let lastActiveTab = 'games';
-  let GAMES = [];
-  let APPS = [];
+    const searchInput = document.getElementById('q');
 
-  /* Load Games JSON */
-  function loadGames() {
-    fetch('arcade_data.json')
-      .then(r => r.json())
-      .then(data => {
-        GAMES = data.games || [];
-        render(GAMES);
-        updateCount();
+    const settingsModal = document.getElementById('settingsModal');
+    const closeSettings = document.getElementById('closeSettings');
+    const settingsButton = document.getElementById('settingsButton');
+
+    const gamesCountElement = document.getElementById('gamesCount');
+
+    let lastActiveTab = 'games';
+    let GAMES = [];
+    let APPS = [];
+
+    /* Load Games JSON */
+    function loadGames() {
+      fetch('arcade_data.json')
+        .then(r => r.json())
+        .then(data => {
+          GAMES = data.games || [];
+          render(GAMES);
+          updateCount();
+        });
+    }
+
+    /* Load Apps JSON */
+    function loadApps() {
+      fetch('apps_data.json')
+        .then(r => r.json())
+        .then(data => {
+          APPS = data.apps || [];
+          render(APPS);
+          updateCount();
+        });
+    }
+
+    /* Render Grid */
+    function render(items) {
+      const grid = document.getElementById('grid');
+      const q = searchInput.value.toLowerCase();
+      grid.innerHTML = '';
+
+      items
+        .filter(item => item.title.toLowerCase().includes(q))
+        .forEach(item => grid.appendChild(createCard(item)));
+    }
+
+    /* Create Card */
+    function createCard(item) {
+      const el = document.createElement('article');
+      el.className = 'card';
+
+      const img = document.createElement('img');
+      img.className = 'thumb';
+
+      img.loading = "lazy";
+      img.src = item.thumb;
+      img.alt = item.title;
+
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+
+      const h3 = document.createElement('h3');
+      h3.textContent = item.title;
+
+      const btn = document.createElement('button');
+      btn.className = 'play';
+      btn.textContent = 'Play';
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openItem(item);
       });
-  }
 
-  /* Load Apps JSON */
-  function loadApps() {
-    fetch('apps_data.json')
-      .then(r => r.json())
-      .then(data => {
-        APPS = data.apps || [];
-        render(APPS);
-        updateCount();
-      });
-  }
+      meta.appendChild(h3);
+      meta.appendChild(btn);
+      el.appendChild(img);
+      el.appendChild(meta);
 
-  /* Render Grid */
-  function render(items) {
-    const grid = document.getElementById('grid');
-    const q = searchInput.value.toLowerCase();
-    grid.innerHTML = '';
+      return el;
+    }
 
-    items
-      .filter(item => item.title.toLowerCase().includes(q))
-      .forEach(item => grid.appendChild(createCard(item)));
-  }
+    /* Open Item in Modal */
+    function openItem(item) {
+      modal.style.display = 'flex';
 
-  /* Create Card */
-  function createCard(item) {
-    const el = document.createElement('article');
-    el.className = 'card';
+      fetch(item.src)
+        .then(r => r.text())
+        .then(html => {
+          gameFrame.contentDocument.open();
+          gameFrame.contentDocument.write(html);
+          gameFrame.contentDocument.close();
+        })
+        .catch(err => {
+          gameFrame.contentDocument.open();
+          gameFrame.contentDocument.write(`
+            <h2 style="color:white;padding:20px;">
+              Failed to load game
+            </h2>
+          `);
+          gameFrame.contentDocument.close();
+        });
+    }
 
-    const img = document.createElement('img');
-    img.className = 'thumb';
+    /* Close Modal */
+    closeModal.addEventListener('click', () => {
+      modal.style.display = 'none';
+      gameFrame.src = "";
 
-    img.loading = "lazy";
-    img.src = item.thumb;
-    img.alt = item.title;
+      if (lastActiveTab === 'games') loadGames();
+      else loadApps();
+    });
+    /* Fullscreen Button */
+    fullscreenBtn.addEventListener('click', () => {
+      modal.style.inset = "0";
+      modal.style.padding = "0";
 
-    const meta = document.createElement('div');
-    meta.className = 'meta';
-
-    const h3 = document.createElement('h3');
-    h3.textContent = item.title;
-
-    const btn = document.createElement('button');
-    btn.className = 'play';
-    btn.textContent = 'Play';
-
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openItem(item);
+      if (gameFrame.requestFullscreen) {
+        gameFrame.requestFullscreen();
+      } else if (gameFrame.webkitRequestFullscreen) {
+        gameFrame.webkitRequestFullscreen();
+      } else if (gameFrame.msRequestFullscreen) {
+        gameFrame.msRequestFullscreen();
+      }
     });
 
-    meta.appendChild(h3);
-    meta.appendChild(btn);
-    el.appendChild(img);
-    el.appendChild(meta);
+    /* Auto-exit fullscreen fix */
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+        modal.style.inset = "";
+        modal.style.padding = "";
+      }
+    });
 
-    return el;
-  }
+    /* Tabs */
+    gamesTab.addEventListener('click', () => {
+      lastActiveTab = 'games';
+      gamesTab.classList.add('active');
+      appsTab.classList.remove('active');
+      unlockerTab.classList.remove('active');
+      modal.style.display = 'none';
+      loadGames();
+    });
 
-  /* Open Item in Modal */
-  function openItem(item) {
-    modal.style.display = 'flex';
+    appsTab.addEventListener('click', () => {
+      lastActiveTab = 'apps';
+      appsTab.classList.add('active');
+      gamesTab.classList.remove('active');
+      unlockerTab.classList.remove('active');
+      modal.style.display = 'none';
+      loadApps();
+    });
 
-    fetch(item.src)
-      .then(r => r.text())
-      .then(html => {
-        gameFrame.contentDocument.open();
-        gameFrame.contentDocument.write(html);
-        gameFrame.contentDocument.close();
-      })
-      .catch(err => {
-        gameFrame.contentDocument.open();
-        gameFrame.contentDocument.write(`
-          <h2 style="color:white;padding:20px;">
-            Failed to load game
-          </h2>
-        `);
-        gameFrame.contentDocument.close();
-      });
-  }
+    unlockerTab.addEventListener('click', () => {
+      unlockerTab.classList.add('active');
+      gamesTab.classList.remove('active');
+      appsTab.classList.remove('active');
 
-  /* Close Modal */
-  closeModal.addEventListener('click', () => {
-    modal.style.display = 'none';
-    gameFrame.src = "";
+      modal.style.display = 'flex';
+      gameFrame.src = "https://ihce0h92o3nndk0.pages.dev/";
+    });
 
-    if (lastActiveTab === 'games') loadGames();
-    else loadApps();
-  });
+    /* Instant Search */
+    searchInput.addEventListener('input', () => {
+      render(gamesTab.classList.contains('active') ? GAMES : APPS);
+    });
 
-  /* ⭐ FULLSCREEN BUTTON */
-  fullscreenBtn.addEventListener('click', () => {
-    // Make modal fill the entire screen
-    modal.style.inset = "0";
-    modal.style.padding = "0";
-
-    // Real browser fullscreen
-    if (gameFrame.requestFullscreen) {
-      gameFrame.requestFullscreen();
-    } else if (gameFrame.webkitRequestFullscreen) {
-      gameFrame.webkitRequestFullscreen();
-    } else if (gameFrame.msRequestFullscreen) {
-      gameFrame.msRequestFullscreen();
+    /* Update Count */
+    function updateCount() {
+      gamesCountElement.textContent =
+        "Count: " + (gamesTab.classList.contains('active') ? GAMES.length : APPS.length);
     }
-  });
 
-  /* ⭐ Auto-exit fix */
-  document.addEventListener('fullscreenchange', () => {
-    if (!document.fullscreenElement) {
-      modal.style.inset = "";
-      modal.style.padding = "";
-    }
-  });
+    /* Settings Modal */
+    settingsButton.addEventListener('click', () => {
+      settingsModal.classList.add('show');
+      settingsModal.style.display = 'flex';
+    });
 
-  /* Tabs */
-  gamesTab.addEventListener('click', () => {
-    lastActiveTab = 'games';
-    gamesTab.classList.add('active');
-    appsTab.classList.remove('active');
-    unlockerTab.classList.remove('active');
-    modal.style.display = 'none';
-    loadGames();
-  });
+    closeSettings.addEventListener('click', () => {
+      settingsModal.classList.remove('show');
+      setTimeout(() => settingsModal.style.display = 'none', 250);
+    });
 
-  appsTab.addEventListener('click', () => {
-    lastActiveTab = 'apps';
-    appsTab.classList.add('active');
-    gamesTab.classList.remove('active');
-    unlockerTab.classList.remove('active');
-    modal.style.display = 'none';
-    loadApps();
-  });
+    /* Load Themes */
+    fetch('themes.json')
+      .then(r => r.json())
+      .then(data => {
+        const themeOptions = document.getElementById('themeOptions');
 
-  unlockerTab.addEventListener('click', () => {
-    unlockerTab.classList.add('active');
-    gamesTab.classList.remove('active');
-    appsTab.classList.remove('active');
+        data.themes.forEach(theme => {
+          const opt = document.createElement('div');
+          opt.className = 'theme-option';
+          opt.textContent = theme.name;
 
-    modal.style.display = 'flex';
-    gameFrame.src = "https://ihce0h92o3nndk0.pages.dev/";
-  });
+          opt.addEventListener('click', () => {
+            Object.keys(theme).forEach(key => {
+              document.documentElement.style.setProperty(key, theme[key]);
+            });
 
-  /* Instant Search */
-  searchInput.addEventListener('input', () => {
-    render(gamesTab.classList.contains('active') ? GAMES : APPS);
-  });
-
-  /* Update Count */
-  function updateCount() {
-    gamesCountElement.textContent = "Count: " +
-      (gamesTab.classList.contains('active') ? GAMES.length : APPS.length);
-  }
-
-  /* Settings Modal */
-  settingsButton.addEventListener('click', () => {
-    settingsModal.classList.add('show');
-    settingsModal.style.display = 'flex';
-  });
-
-  closeSettings.addEventListener('click', () => {
-    settingsModal.classList.remove('show');
-    setTimeout(() => settingsModal.style.display = 'none', 250);
-  });
-
-  /* Load Themes */
-  fetch('themes.json')
-    .then(r => r.json())
-    .then(data => {
-      const themeOptions = document.getElementById('themeOptions');
-
-      data.themes.forEach(theme => {
-        const opt = document.createElement('div');
-        opt.className = 'theme-option';
-        opt.textContent = theme.name;
-
-        opt.addEventListener('click', () => {
-          Object.keys(theme).forEach(key => {
-            document.documentElement.style.setProperty(key, theme[key]);
+            document.querySelectorAll('.theme-option')
+              .forEach(o => o.classList.remove('active'));
+            opt.classList.add('active');
           });
 
-          document.querySelectorAll('.theme-option')
-            .forEach(o => o.classList.remove('active'));
-          opt.classList.add('active');
+          themeOptions.appendChild(opt);
         });
-
-        themeOptions.appendChild(opt);
       });
-    });
 
-  /* Load Initial Tab */
-  gamesTab.classList.add('active');
-  loadGames();
-</script>
+    /* Load initial content */
+    gamesTab.classList.add('active');
+    loadGames();
+  </script>
+
 </body>
 </html>
