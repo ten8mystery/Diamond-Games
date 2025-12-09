@@ -91,7 +91,6 @@
       font-size:13px;
     }
 
-    /* HERO */
     .hero {
       padding-top:130px;
       text-align:center;
@@ -111,7 +110,6 @@
       color:var(--text-soft);
     }
 
-    /* SEARCH */
     .search-wrap { margin-top:22px; display:flex; justify-content:center; }
 
     .search {
@@ -140,7 +138,6 @@
       color:var(--text);
     }
 
-    /* GRID */
     .grid {
       display:grid;
       grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
@@ -150,7 +147,6 @@
       margin:auto;
     }
 
-    /* CARD */
     .card {
       background:rgba(255,255,255,0.03);
       border:1px solid rgba(255,255,255,0.05);
@@ -189,7 +185,6 @@
 
     .play:hover { transform:translateY(-2px); }
 
-    /* MODAL */
     #modal {
       display:none;
       position:fixed;
@@ -212,9 +207,8 @@
       position:relative;
     }
 
-    #closeModal {
+    #closeModal, #fullscreenBtn {
       position:absolute;
-      right:20px;
       top:16px;
       padding:8px 12px;
       background:rgba(255,255,255,0.12);
@@ -225,20 +219,9 @@
       z-index:100;
     }
 
-    #fullscreenBtn {
-      position:absolute;
-      right:90px;
-      top:16px;
-      padding:8px 12px;
-      background:rgba(255,255,255,0.12);
-      border:none;
-      border-radius:8px;
-      color:white;
-      cursor:pointer;
-      z-index:100;
-    }
+    #closeModal { right:20px; }
+    #fullscreenBtn { right:90px; }
 
-    /* SETTINGS */
     #settingsModal {
       display:none;
       position:fixed;
@@ -274,6 +257,7 @@
     }
 
     .theme-option:hover { background:rgba(255,255,255,0.12); }
+
     .theme-option.active {
       background:linear-gradient(135deg, hsl(var(--accent2)), hsl(var(--accent1)));
       color:white;
@@ -282,6 +266,7 @@
 </head>
 <body>
 
+  <!-- TOP BAR -->
   <div class="hud">
     <div class="logo">
       <img src="favicon.png" alt="Logo">
@@ -292,16 +277,42 @@
     </div>
 
     <div class="right">
-      <button id="gamesTab" class="active">Games</button>
+      <button id="homeTab" class="active">Home</button>
+      <button id="gamesTab">Games</button>
       <button id="appsTab">Apps</button>
       <button id="unlockerTab">Unlocker</button>
-      <span id="gamesCount" class="pill">Count: 0</span>
+      <span id="gamesCount" class="pill" style="display:none;">Count: 0</span>
       <button id="settingsButton">Settings</button>
     </div>
   </div>
 
   <main>
-    <section class="hero">
+
+    <!-- HOME SECTION -->
+    <section id="homeSection" style="padding-top:130px; text-align:center;">
+      <h2 style="
+        font-size:48px;
+        font-weight:800;
+        background:linear-gradient(90deg, hsl(var(--accent1)), hsl(var(--accent2)));
+        -webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;
+      ">
+        Diamond — Upgraded Gaming
+      </h2>
+
+      <p style="color:var(--text-soft); margin-top:6px;">
+        Featured games picked just for you.
+      </p>
+
+      <div style="max-width:1250px; margin:40px auto; padding:0 22px;">
+        <h3 style="text-align:left; font-size:22px; margin-bottom:18px;">Featured Games</h3>
+
+        <div class="grid" id="featuredGrid"></div>
+      </div>
+    </section>
+
+    <!-- ORIGINAL HERO (HIDDEN UNTIL GAMES/APPS TAB) -->
+    <section class="hero" id="gameHero" style="display:none;">
       <h2>Diamond — Upgraded Gaming</h2>
       <p>Jump into any game, instantly.</p>
 
@@ -312,24 +323,26 @@
       </div>
     </section>
 
-    <section class="grid" id="grid">
-    </section>
-  </main>
+    <!-- ORIGINAL GRID -->
+    <section class="grid" id="grid" style="display:none;"></section>
 
+  </main>
+  <!-- MODAL -->
   <div id="modal">
     <div>
       <button id="closeModal">Close</button>
       <button id="fullscreenBtn">Fullscreen</button>
+
       <iframe id="gameFrame"
         style="width:100%;height:100%;border:none"
         sandbox="allow-scripts allow-same-origin allow-pointer-lock"></iframe>
     </div>
   </div>
-  <!-- SETTINGS MODAL FIX (this was missing before) -->
+
+  <!-- SETTINGS MODAL -->
   <div id="settingsModal">
     <div>
       <h2 style="margin-bottom:10px;">Settings</h2>
-
       <div id="themeOptions"></div>
 
       <button id="closeSettings"
@@ -348,9 +361,16 @@
   </div>
 
   <script>
+    /* ELEMENTS */
+    const homeTab = document.getElementById('homeTab');
     const gamesTab = document.getElementById('gamesTab');
     const appsTab = document.getElementById('appsTab');
     const unlockerTab = document.getElementById('unlockerTab');
+
+    const homeSection = document.getElementById('homeSection');
+    const gameHero = document.getElementById('gameHero');
+    const grid = document.getElementById('grid');
+    const featuredGrid = document.getElementById('featuredGrid');
 
     const modal = document.getElementById('modal');
     const gameFrame = document.getElementById('gameFrame');
@@ -365,11 +385,24 @@
 
     const gamesCountElement = document.getElementById('gamesCount');
 
-    let lastActiveTab = 'games';
+    let lastActiveTab = "home";
     let GAMES = [];
     let APPS = [];
 
-    /* Load Games JSON */
+    /* FEATURED GAMES */
+    const FEATURED = [
+      { title: "Roblox", thumb: "roblox.png", src: "roblox.html" },
+      { title: "Hollow Knight", thumb: "hk.png", src: "hk.html" },
+      { title: "Undertale", thumb: "undertale.png", src: "undertale.html" },
+      { title: "Deltarune", thumb: "deltarune.png", src: "deltarune.html" }
+    ];
+
+    function renderFeatured() {
+      featuredGrid.innerHTML = "";
+      FEATURED.forEach(item => featuredGrid.appendChild(createCard(item)));
+    }
+
+    /* LOAD GAMES */
     function loadGames() {
       fetch('arcade_data.json')
         .then(r => r.json())
@@ -380,7 +413,7 @@
         });
     }
 
-    /* Load Apps JSON */
+    /* LOAD APPS */
     function loadApps() {
       fetch('apps_data.json')
         .then(r => r.json())
@@ -391,28 +424,25 @@
         });
     }
 
-    /* Render Grid */
+    /* RENDER GRID */
     function render(items) {
-      const grid = document.getElementById('grid');
       const q = searchInput.value.toLowerCase();
-      grid.innerHTML = '';
+      grid.innerHTML = "";
 
       items
         .filter(item => item.title.toLowerCase().includes(q))
         .forEach(item => grid.appendChild(createCard(item)));
     }
 
-    /* Create Card */
+    /* CREATE A CARD */
     function createCard(item) {
       const el = document.createElement('article');
       el.className = 'card';
 
       const img = document.createElement('img');
       img.className = 'thumb';
-
-      img.loading = "lazy";
       img.src = item.thumb;
-      img.alt = item.title;
+      img.loading = "lazy";
 
       const meta = document.createElement('div');
       meta.className = 'meta';
@@ -423,11 +453,7 @@
       const btn = document.createElement('button');
       btn.className = 'play';
       btn.textContent = 'Play';
-
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openItem(item);
-      });
+      btn.onclick = () => openItem(item);
 
       meta.appendChild(h3);
       meta.appendChild(btn);
@@ -437,7 +463,7 @@
       return el;
     }
 
-    /* Open Item in Modal */
+    /* OPEN GAME */
     function openItem(item) {
       modal.style.display = 'flex';
 
@@ -448,125 +474,136 @@
           gameFrame.contentDocument.write(html);
           gameFrame.contentDocument.close();
         })
-        .catch(err => {
+        .catch(() => {
           gameFrame.contentDocument.open();
-          gameFrame.contentDocument.write(`
-            <h2 style="color:white;padding:20px;">
-              Failed to load game
-            </h2>
-          `);
+          gameFrame.contentDocument.write(`<h2 style="color:white;padding:20px;">Failed to load game</h2>`);
           gameFrame.contentDocument.close();
         });
     }
 
-    /* Close Modal */
-    closeModal.addEventListener('click', () => {
+    /* CLOSE MODAL */
+    closeModal.onclick = () => {
       modal.style.display = 'none';
       gameFrame.src = "";
+    };
 
-      if (lastActiveTab === 'games') loadGames();
-      else loadApps();
-    });
-    /* Fullscreen Button */
-    fullscreenBtn.addEventListener('click', () => {
-      modal.style.inset = "0";
-      modal.style.padding = "0";
+    /* FULLSCREEN */
+    fullscreenBtn.onclick = () => {
+      if (gameFrame.requestFullscreen) gameFrame.requestFullscreen();
+    };
 
-      if (gameFrame.requestFullscreen) {
-        gameFrame.requestFullscreen();
-      } else if (gameFrame.webkitRequestFullscreen) {
-        gameFrame.webkitRequestFullscreen();
-      } else if (gameFrame.msRequestFullscreen) {
-        gameFrame.msRequestFullscreen();
-      }
-    });
-
-    /* Auto-exit fullscreen fix */
     document.addEventListener('fullscreenchange', () => {
-      if (!document.fullscreenElement) {
-        modal.style.inset = "";
-        modal.style.padding = "";
-      }
+      if (!document.fullscreenElement) modal.style.padding = "";
     });
 
-    /* Tabs */
-    gamesTab.addEventListener('click', () => {
-      lastActiveTab = 'games';
-      gamesTab.classList.add('active');
+    /* TAB LOGIC */
+
+    homeTab.onclick = () => {
+      lastActiveTab = "home";
+
+      homeTab.classList.add('active');
+      gamesTab.classList.remove('active');
       appsTab.classList.remove('active');
       unlockerTab.classList.remove('active');
-      modal.style.display = 'none';
-      loadGames();
-    });
 
-    appsTab.addEventListener('click', () => {
-      lastActiveTab = 'apps';
+      homeSection.style.display = "block";
+      gameHero.style.display = "none";
+      grid.style.display = "none";
+      gamesCountElement.style.display = "none";
+
+      renderFeatured();
+    };
+
+    gamesTab.onclick = () => {
+      lastActiveTab = "games";
+
+      gamesTab.classList.add('active');
+      homeTab.classList.remove('active');
+      appsTab.classList.remove('active');
+      unlockerTab.classList.remove('active');
+
+      homeSection.style.display = "none";
+      gameHero.style.display = "block";
+      grid.style.display = "grid";
+      gamesCountElement.style.display = "inline-block";
+
+      loadGames();
+    };
+
+    appsTab.onclick = () => {
+      lastActiveTab = "apps";
+
       appsTab.classList.add('active');
+      homeTab.classList.remove('active');
       gamesTab.classList.remove('active');
       unlockerTab.classList.remove('active');
-      modal.style.display = 'none';
-      loadApps();
-    });
 
-    unlockerTab.addEventListener('click', () => {
+      homeSection.style.display = "none";
+      gameHero.style.display = "block";
+      grid.style.display = "grid";
+      gamesCountElement.style.display = "inline-block";
+
+      loadApps();
+    };
+
+    unlockerTab.onclick = () => {
       unlockerTab.classList.add('active');
+      homeTab.classList.remove('active');
       gamesTab.classList.remove('active');
       appsTab.classList.remove('active');
 
       modal.style.display = 'flex';
       gameFrame.src = "https://ihce0h92o3nndk0.pages.dev/";
+    };
+
+    /* SEARCH */
+    searchInput?.addEventListener('input', () => {
+      if (lastActiveTab === "games") render(GAMES);
+      if (lastActiveTab === "apps") render(APPS);
     });
 
-    /* Instant Search */
-    searchInput.addEventListener('input', () => {
-      render(gamesTab.classList.contains('active') ? GAMES : APPS);
-    });
-
-    /* Update Count */
+    /* COUNT */
     function updateCount() {
       gamesCountElement.textContent =
-        "Count: " + (gamesTab.classList.contains('active') ? GAMES.length : APPS.length);
+        "Count: " + (lastActiveTab === "games" ? GAMES.length : APPS.length);
     }
 
-    /* Settings Modal */
-    settingsButton.addEventListener('click', () => {
+    /* SETTINGS */
+    settingsButton.onclick = () => {
       settingsModal.classList.add('show');
       settingsModal.style.display = 'flex';
-    });
+    };
 
-    closeSettings.addEventListener('click', () => {
+    closeSettings.onclick = () => {
       settingsModal.classList.remove('show');
       setTimeout(() => settingsModal.style.display = 'none', 250);
-    });
+    };
 
-    /* Load Themes */
+    /* THEMES */
     fetch('themes.json')
       .then(r => r.json())
       .then(data => {
-        const themeOptions = document.getElementById('themeOptions');
-
+        const options = document.getElementById('themeOptions');
         data.themes.forEach(theme => {
-          const opt = document.createElement('div');
-          opt.className = 'theme-option';
-          opt.textContent = theme.name;
+          const div = document.createElement('div');
+          div.className = 'theme-option';
+          div.textContent = theme.name;
 
-          opt.addEventListener('click', () => {
-            Object.keys(theme).forEach(key => {
+          div.onclick = () => {
+            for (const key in theme) {
               document.documentElement.style.setProperty(key, theme[key]);
-            });
-
+            }
             document.querySelectorAll('.theme-option')
               .forEach(o => o.classList.remove('active'));
-            opt.classList.add('active');
-          });
+            div.classList.add('active');
+          };
 
-          themeOptions.appendChild(opt);
+          options.appendChild(div);
         });
       });
 
-    /* Load initial content */
-    gamesTab.classList.add('active');
-    loadGames();
+    /* INITIAL LOAD */
+    renderFeatured();
   </script>
 
 </body>
