@@ -356,17 +356,20 @@
     let APPS = [];
 
     /* FEATURED GAMES */
-    const FEATURED = [
-      { title: "Roblox", thumb: "roblox.png", src: "roblox.html" },
-      { title: "Hollow Knight", thumb: "hk.png", src: "hk.html" },
-      { title: "Undertale", thumb: "undertale.png", src: "undertale.html" },
-      { title: "Deltarune", thumb: "deltarune.png", src: "deltarune.html" }
-    ];
 
-    function renderFeatured() {
-      featuredGrid.innerHTML = "";
-      FEATURED.forEach(item => featuredGrid.appendChild(createCard(item)));
-    }
+async function renderFeatured() {
+  const data = await fetch("arcade_data.json").then(r => r.json());
+  const all = data.games || [];
+
+  const picks = ["Roblox", "Hollow Knight", "Undertale", "Deltarune"];
+
+  featuredGrid.innerHTML = "";
+
+  all
+    .filter(g => picks.includes(g.title))
+    .forEach(g => featuredGrid.appendChild(createCard(g)));
+}
+
 
     /* LOAD GAMES */
     function loadGames() {
